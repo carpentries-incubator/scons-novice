@@ -67,12 +67,12 @@ which contains:
 - `books/`
 
 Or, ask students to download
-[make-lesson.zip][zipfile] from this repository.
+[scons-lesson.zip][zipfile] from this repository.
 
-To recreate `make-lesson.zip`, run:
+To recreate `scons-lesson.zip`, run:
 
 ```bash
-$ make make-lesson.zip
+$ make scons-lesson.zip
 ```
 
 ## Beware of Spaces!
@@ -171,7 +171,7 @@ The lesson is based on GNU Make. Although it is very rare, on some systems
 (e.g. AIX) you might find `make` not pointing to GNU Make and `gmake` needs to
 be used instead.
 
-[zipfile]: files/make-lesson.zip
+[zipfile]: files/scons-lesson.zip
 [makefile2graph]: https://github.com/lindenb/makefile2graph
 [graphviz]: https://www.graphviz.org/
 

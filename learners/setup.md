@@ -6,18 +6,18 @@ title: Setup
 
 You need to download some files to follow this lesson:
 
-1. Download [make-lesson.zip][zip-file].
+1. Download [scons-lesson.zip][zip-file].
 
-2. Move `make-lesson.zip` into a directory which you can access via your bash shell.
+2. Move `scons-lesson.zip` into a directory which you can access via your bash shell.
 
 3. Open a Bash shell window.
 
 4. Navigate to the directory where you downloaded the file.
 
-5. Unpack `make-lesson.zip`:
+5. Unpack `scons-lesson.zip`:
   
   ```source
-  $ unzip make-lesson.zip
+  $ unzip scons-lesson.zip
   ```
 
 6. Change into the `make-lesson` directory:
@@ -59,7 +59,7 @@ They can be installed separately, but the easiest approach is to install
 [Anaconda](https://www.anaconda.com/distribution/) which includes all of the
 necessary python software.
 
-[zip-file]: files/make-lesson.zip
+[zip-file]: files/scons-lesson.zip
 
 
 
