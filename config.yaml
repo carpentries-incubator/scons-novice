@@ -11,7 +11,7 @@
 carpentry: 'swc'
 
 # Overall title for pages.
-title: 'Automation and Make'
+title: 'Automation and SCons'
 
 # Date the lesson was created (YYYY-MM-DD, this is empty by default)
 created: '2015-06-18'
@@ -58,7 +58,7 @@ contact: 'team@carpentries.org'
 # - another-learner.md
 
 # Order of episodes in your lesson
-episodes: 
+episodes:
 - 01-intro.md
 - 02-makefiles.md
 - 03-variables.md
@@ -70,13 +70,13 @@ episodes:
 - 09-conclusion.md
 
 # Information for Learners
-learners: 
+learners:
 
 # Information for Instructors
-instructors: 
+instructors:
 
 # Learner Profiles
-profiles: 
+profiles:
 
 # Customisation ---------------------------------------------
 #
