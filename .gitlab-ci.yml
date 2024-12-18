@@ -56,8 +56,8 @@ environment:
     - conda env create --prefix ${environment_path} --file environment.yml --solver=libmamba --force
     # Build the R-packages
     - conda activate ${environment_path}
-    - PROJECT_TMPDIR="/scratch/$USER/workbench"
-    - mkdir ${PROJECT_TMPDIR}
+    - PROJECT_TMPDIR="/scratch/$USER/${package_name}/workbench"
+    - mkdir -p ${PROJECT_TMPDIR}
     - TMPDIR=${PROJECT_TMPDIR} R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))'
     # Remove write permissions from group to avoid accidental environment changes
     - chmod -R 755 ${environment_path}
