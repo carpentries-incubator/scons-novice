@@ -31,11 +31,10 @@ before_script:
   - if [[ -z ${base_environment} ]]; then exit 1; fi
   - module load ${base_environment}
   # Activate CI environment if available. If not, rely on environment job running before other jobs.
-  - module use ${PWD}/modulefiles
   - project_environment="${project_name}-dev"
   - environment_path="${ci_environment_path}/${project_environment}"
   - echo ${environment_path}
-  - if [[ -d ${environment_path} ]]; then module unload ${base_environment}; module load ${project_environment}; fi
+  - if [[ -d ${environment_path} ]]; then conda activate ${environment_path}; fi
   - conda info
 
 environment:
@@ -48,11 +47,9 @@ environment:
     - if: $CI_COMMIT_BRANCH == "main"
   script:
     # Job variables
-    - echo ${project_environment}
     - echo ${base_environment}
     - echo ${environment_path}
     - echo ${aea_modulefiles}
-    - if [[ -z ${project_environment} ]]; then exit 1; fi
     - if [[ -z ${base_environment} ]]; then exit 1; fi
     - if [[ -z ${environment_path} ]]; then exit 1; fi
     - if [[ -z ${aea_modulefiles} ]]; then exit 1; fi
@@ -60,8 +57,7 @@ environment:
     - echo ${CI_COMMIT_BEFORE_SHA}
     - echo ${CI_COMMIT_BRANCH}
     # Always build from the base/aea compute environment with boa/libmamba
-    - module unload ${project_environment}
-    - module load ${base_environment}
+    - if [[ ${CONDA_PREFIX} == ${environment_path} ]]; then conda deactivate; fi
     # Don't rebuild environment for merge request pipelines unless the environment is missing
     - if [[ -d "${environment_path}" ]]; then exists=true; else exists=false; fi
     - if [[ $CI_MERGE_REQUEST_ID ]] && ${exists}; then exit 0; fi
@@ -79,8 +75,6 @@ environment:
     - TMPDIR=${PROJECT_TMPDIR} R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))'
     # Remove write permissions from group to avoid accidental environment changes
     - chmod -R 755 ${environment_path}
-    # place the common modulefiles in an accessible location
-    - cp ${PWD}/modulefiles/* ${aea_modulefiles}
   tags:
     - shell-aea
 
