@@ -4,94 +4,85 @@ title: 'FIXME'
 
 ## Glossary
 
-## Running Make
+## Running SCons
 
-To run Make:
+To run SCons:
 
 ```bash
-$ make
+$ scons
 ```
 
-Make will look for a Makefile called `Makefile` and will build the
-default target, the first target in the Makefile.
+SCons will look for a configuration file called `SConstruct` and will build the
+default target(s).
+.
 
-To use a Makefile with a different name, use the `-f` flag e.g.
+To use a configuration file with a different name, use the `--sconstruct` option e.g.
 
 ```bash
-$ make -f build-files/analyze.mk
+$ scons --sconstruct=build-files/analyze
 ```
 
 To build a specific target, provide it as an argument e.g.
 
 ```bash
-$ make isles.dat
+$ scons isles.dat
 ```
 
-If the target is up-to-date, Make will print a message like:
+If the target is up-to-date, SCons will print a message like:
 
 ```output
-make: `isles.dat' is up to date.
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+scons: done building targets.
 ```
 
-To see the actions Make will run when building a target, without
+To see the actions SCons will run when building a target, without
 running the actions, use the `--dry-run` flag e.g.
 
 ```bash
-$ make --dry-run isles.dat
+$ scons --dry-run isles.dat
 ```
 
 Alternatively, use the abbreviation `-n`.
 
 ```bash
-$ make -n isles.dat
+$ scons -n isles.dat
 ```
 
 ## Trouble Shooting
 
-If Make prints a message like,
+TBD
 
-```error
-Makefile:3: *** missing separator.  Stop.
+## Configuration files
+
+SCons uses Python as the configuration file language. Tasks can be defined in Python class/function
+call syntax.
+
+Tasks:
+
+```python
+Command(
+    target=["target"],
+    source=["source1", "source2"]
+    action=["action1", "action2"]
+)
 ```
 
-then check that all the actions are indented by TAB characters and not
-spaces.
-
-If Make prints a message like,
-
-```error
-No such file or directory: 'books/%.txt'
-make: *** [isles.dat] Error 1
-```
-
-then you may have used the Make wildcard, `%`, in an action in a
-pattern rule. Make wildcards cannot be used in actions.
-
-## Makefiles
-
-Rules:
-
-```make
-target : dependency1 dependency2 ...
-	action1
-	action2
-	...
-```
-
-- Each rule has a target, a file to be created, or built.
-- Each rule has zero or more dependencies, files that are needed to
+- Each task has one or more targets, the files to be created, or built.
+- Each task has one or more sources, the depedencies that are needed to
   build the target.
-- `:` separates the target and the dependencies.
-- Dependencies are separated by spaces.
-- Each rule has zero or more actions, commands to run to build the
-  target using the dependencies.
-- Actions are indented using the TAB character, not 8 spaces.
+- Targets and sources can be passed as list via keyword arguments.
+- Each rule has one or more actions, commands to run to build the
+  target using the sources.
+- Actions are provided as a list of strings via keyword arguments.
 
 Dependencies:
 
-- If any dependency does not exist then Make will look for a rule to
+- If any source does not exist then SCons will look for a task to
   build it.
-- The order of rebuilding dependencies is arbitrary. You should not
+- The order of rebuilding dependencies is declarative. You should not
   assume that they will be built in the order in which they are listed.
 - Dependencies must form a directed acyclic graph. A target cannot
   depend on a dependency which, in turn depends upon, or has a
@@ -99,44 +90,55 @@ Dependencies:
 
 Comments:
 
-```make
-# This is a Make comment.
+```python
+# SCons uses Python for its configuration language. This is a Python comment.
 ```
 
-Line continuation character:
+List continuation:
 
-```make
-ARCHIVE = isles.dat isles.png \
-          abyss.dat abyss.png \
-          sierra.dat sierra.png
+```python
+archive = [
+    "isles.dat",
+    "isles.png",
+    "abyss.dat",
+    "abyss.png",
+    "sierra.dat",
+    "sierra.png",
+]
 ```
 
-- If a list of dependencies or an action is too long, a Makefile can
-  become more difficult to read.
-- Backslash,`\`, the line continuation character, allows you to split
-  up a list of dependencies or an action over multiple lines, to make
-  them easier to read.
-- Make will combine the multiple lines into a single list of dependencies
-  or action.
+- If a list of targets, sources, or actions is too long, an SConstruct file can become more
+  difficult to read.
+- Python allows you to split up a list over multiple lines, to make them easier to read.
+- Python will combine the multiple lines into a single list
 
-Phony targets:
+Alias targets:
 
-```make
-.PHONY : clean
-clean :
-	rm -f *.dat
+SCons can define [aliases](https://scons.org/doc/production/HTML/scons-man.html#f-Alias) as
+short-hand for collections of build targets.
+
+```python
+targets = Command(
+    target=["target1", "target2"],
+    source=["source"],
+    action=["action"]
+)
+Alias("target", targets)
 ```
 
-- Phony targets are a short-hand for sequences of actions.
-- No file with the target name is built when a rule with a phony
-  target is run.
+- Alias targets are a short-hand for building target lists.
 
-Automatic variables:
+Special variables:
 
-- `$<` denotes 'the first dependency of the current rule'.
-- `$@` denotes 'the target of the current rule'.
-- `$^` denotes 'the dependencies of the current rule'.
-- `$*` denotes 'the stem with which the pattern of the current rule matched'.
+SCons has several [special
+variables](https://scons.org/doc/production/HTML/scons-man.html#special_variables) available for
+task construction. A few common use cases are mentioned here.
+
+- `$SOURCE` and `$SOURCES[0]` denote 'the first source of the current task'.
+- `$SOURCES` denotes 'the sources of the current task'.
+- `$TARGET` and `$TARGETS[0]` denote 'the first target of the current task'.
+- `$TARGETS` denotes 'the dependencies of the current task'.
+- `$TARGET.filebase` denotes 'the stem of the first target of the current task'.
 
 Pattern rules:
 
