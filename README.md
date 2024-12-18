@@ -15,7 +15,7 @@ Install Conda and create an environment from the conda-forge channel. You may ne
 
 ```
 $ conda create --channel conda-forge --name workbench 'git>=2.28' 'r-base>=3.6' 'pandoc>=2.11' pkg-config libxslt r-httr2 r-pkgdown r-httpuv r-servr
-$ TMPDIR=/scratch/$USER/workbench R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))' 2>&1 | tee workbench-$(date +"%Y%m%d%H%M").stdout
+$ TMPDIR=/scratch/$USER/workbench R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))'
 ```
 
 ## Build
