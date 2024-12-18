@@ -15,42 +15,33 @@ You need to download some files to follow this lesson:
 4. Navigate to the directory where you downloaded the file.
 
 5. Unpack `scons-lesson.zip`:
-  
+
   ```source
   $ unzip scons-lesson.zip
   ```
 
 6. Change into the `make-lesson` directory:
-  
+
   ```source
   $ cd make-lesson
   ```
 
 ## Software
 
-You also need to have the following software installed on your computer to
-follow this lesson:
+You also need to have the following software installed on your computer to follow this lesson. The
+recommeneded approach is to create a
+[Conda](https://docs.conda.io/projects/conda/en/latest/index.html) virtual environment for this
+lesson.
 
-### GNU Make
+```
+$ conda create --name scons-novice python scons numpy matplotlib
+$ conda activate scons-novice
+```
 
-#### Linux
+### SCons
 
-Make is a standard tool on most Linux systems and should already be available.
-Check if you already have Make installed by typing `make -v` into a terminal.
-
-One exception is Debian, and you should install Make from the terminal using
-`sudo apt-get install make`.
-
-#### OSX
-
-You will need to have Xcode installed (download from the
-[Apple website](https://developer.apple.com/xcode/)).
-Check if you already have Make installed by typing `make -v` into a terminal.
-
-#### Windows
-
-Use the Software Carpentry
-[Windows installer](https://github.com/swcarpentry/windows-installer).
+[SCons](https://scons.org/) can be installed with the [pip](https://pip.pypa.io/en/stable/) or
+[Conda](https://docs.conda.io/projects/conda/en/latest/index.html) package managers.
 
 ### Python
 
@@ -60,6 +51,3 @@ They can be installed separately, but the easiest approach is to install
 necessary python software.
 
 [zip-file]: files/scons-lesson.zip
-
-
-
