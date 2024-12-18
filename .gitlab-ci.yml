@@ -19,14 +19,13 @@ before_script:
   - module use ${aea_modulefiles}
   - module load texlive
   # Start with an AEA environment to put Conda on PATH
-  - project_environment="${package_name}-env"
+  - project_environment="${package_name}-dev"
   - environment_choices="aea-quarterly aea-release"
   - for env in ${environment_choices}; do if [[ -d "${aea_compute_path}/${env}" ]]; then environment=${env}; break; fi; done
   - echo ${environment}
   - module load ${environment}
   # Activate CI environment if available. If not, rely on environment job running before other jobs.
   - module use ${PWD}/modulefiles
-  - project_environment="${package_name}-env"
   - environment_path="${aea_compute_path}/${project_environment}"
   - echo ${environment_path}
   - if [[ -d ${environment_path} ]]; then module unload ${environment}; module load ${project_environment}; fi

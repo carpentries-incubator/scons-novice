@@ -7,7 +7,7 @@ conflict aea-weekly
 conflict aea-beta
 
 # Set AEA standard software version and environment names
-set environment "scons-novice-env"
+set environment "scons-novice-dev"
 
 # Get current hostname
 set hostname [info hostname]
