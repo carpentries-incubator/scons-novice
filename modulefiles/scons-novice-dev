@@ -3,8 +3,7 @@
 # Prereqs and conflicts
 conflict aea-release
 conflict aea-quarterly
-conflict aea-weekly
-conflict aea-beta
+conflict aea-nightly
 
 # Set AEA standard software version and environment names
 set environment "scons-novice-dev"
@@ -12,22 +11,30 @@ set environment "scons-novice-dev"
 # Get current hostname
 set hostname [info hostname]
 
+# Get the current user
+set user $env(USER)
+
 # Set host specific environment information
 set projects ""
 set anaconda_path ""
 # HPC case
 if { [ string match "*.localdomain" $hostname ] ||
      [ string match "??-rfe?.lanl.gov" $hostname ] ||
-     [ string match "??-fe?.lanl.gov" $hostname ] } {
+     [ string match "??-fe?.lanl.gov" $hostname ] ||
+     [ string match "nid??????" $hostname ] } {
     set projects "/usr/projects/ea"
+    set scratch "/lustre/roscratch1/$user"
+    set ci_environment_path "$scratch"
 # W-13 machine cases
 } elseif { [ string match "*.lanl.gov" $hostname ] } {
     set projects "/projects"
+    set scratch "/scratch/$user"
+    set ci_environment_path "$projects/aea_compute"
 # Error out
 } else {
     error "Unknown or unsupported host"
 }
-set environment_path "$projects/aea_compute/$environment"
+set environment_path "$ci_environment_path/$environment"
 set anaconda_source "$environment_path/etc/profile.d/conda.sh"
 set environment_bin "$environment_path/bin"
 set environment_man "$environment_path/share/man"
@@ -42,7 +49,7 @@ set conda_variables "CONDA_SHLVL CONDA_EXE _CE_CONDA CONDA_PYTHON_EXE"
 set conda_functions "__add_sys_prefix_to_path __conda_hashr __conda_activate __conda_reactivate conda"
 if { [module-info mode load] || [module-info mode switch2] } {
     puts stdout "source $anaconda_source > /dev/null;"
-    puts stdout "conda activate $projects/aea_compute/$environment;"
+    puts stdout "conda activate $environment_path;"
 } elseif { [module-info mode remove] && ![module-info mode switch3] } {
     # TODO: use "getenv" when module v4.0 is available
     # https://modules.readthedocs.io/en/latest/modulefile.html#mfcmd-getenv
@@ -59,7 +66,7 @@ if { [module-info mode load] || [module-info mode switch2] } {
 }
 
 # Set help information
-module-whatis "Configure the common scons-novice development bash and Conda environments"
+module-whatis "Configure the common SCons-novice development bash and Conda environments"
 proc ModulesHelp {} {
     global hostname
     global environment
@@ -69,7 +76,7 @@ proc ModulesHelp {} {
     global environment_bin
     global environment_man
 
-    puts stderr "\nscons-novice modulefiles debugging information"
+    puts stderr "\nSCons-novice modulefiles debugging information"
     puts stderr "hostname: $hostname"
     puts stderr "environment: $environment"
     puts stderr "projects: $projects"
