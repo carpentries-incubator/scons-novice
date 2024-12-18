@@ -8,8 +8,6 @@ The following instructions are adopted from https://carpentries.github.io/workbe
 
 ## Environment
 
-Instructions adopted from https://carpentries.github.io/workbench/
-
 Install Conda and create an environment from the conda-forge channel. You may need to re-direct
 ``TMPDIR`` if ``/tmp`` is mounted without execute permissions.
 
