@@ -56,6 +56,7 @@ environment:
     # Re-build the Conda environment on changes to environment files
     - conda env create --prefix ${environment_path} --file environment.yml --solver=libmamba --force
     # Build the R-packages
+    - conda activate ${environment_path}
     - PROJECT_TMPDIR="/scratch/$USER/workbench"
     - mkdir ${PROJECT_TMPDIR}
     - TMPDIR=${PROJECT_TMPDIR} R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))'
