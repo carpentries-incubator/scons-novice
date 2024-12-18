@@ -20,10 +20,10 @@ You need to download some files to follow this lesson:
   $ unzip scons-lesson.zip
   ```
 
-6. Change into the `make-lesson` directory:
+6. Change into the `scons-lesson` directory:
 
   ```source
-  $ cd make-lesson
+  $ cd scons-lesson
   ```
 
 ## Software
@@ -34,8 +34,8 @@ recommeneded approach is to create a
 lesson.
 
 ```
-$ conda create --name scons-novice python scons numpy matplotlib
-$ conda activate scons-novice
+$ conda create --name scons-lesson python scons numpy matplotlib
+$ conda activate scons-lesson
 ```
 
 ### SCons
