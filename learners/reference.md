@@ -304,59 +304,38 @@ Default(target_nodes)
 update a file or other object.
 
 [assignment]{#assignment}
-:   A request that [Make](#make) stores something in a
-[variable](#variable).
-
-[automatic variable]{#automatic-variable}
-:   A variable whose value is automatically redefined for each
-[rule](#rule). [Make](#make)'s automatic variables include `$@`,
-which holds the rule's [target](#target), `$^`, which holds its
-[dependencies](#dependency), and, `$<`, which holds the first of
-its dependencies, and `$*`, which holds the [stem](#stem) with which
-the pattern was matched. Automatic variables are typically used in
-[pattern rules](#pattern-rule).
+:   A request that [Python](#glossary-python) stores something in a [variable](#variable).
 
 [build file]{#build-file}
-:   A description of [dependencies](#dependency) and [rules](#rule)
-for a [build manager](#build-manager).
+:   A synonym for [configuration file](#configuration-file)
+
+[configuration file]{#configuration-file}
+:   A description of [tasks](#task) for a [build manager](#build-manager).  Also called a [build
+file](#build-file).
 
 [build manager]{#build-manager}
-:   A program, such as [Make](#make), whose main purpose is to build or
+:   A program, such as [SCons](#scons), whose main purpose is to build or
 update software, documentation, web sites, data files, images, and
 other things.
 
-[default rule]{#default-rule}
-:   The [rule](#rule) that is executed if no [target](#target) is
-specified when a [build manager](#build-manager) is run.
-
 [default target]{#default-target}
-:   The [target](#target) of the [default rule](#default-rule).
+:   The [target](#target) that is built if no [target](#target) is specified when a [build
+manager](#build-manager) is run.
 
 [dependency]{#dependency}
-:   A file that a [target](#target) depends on. If any of a target's
-[dependencies](#dependency) are newer than the target itself, the
-target needs to be updated. A target's dependencies are also
-called its prerequisites. If a target's dependencies do not exist,
-then they need to be built first.
-
-[false dependency]{#false-dependency}
-:   This can refer to a [dependency](#dependency) that is artificial.
-e.g. a false dependency is introduced if a data analysis script
-is added as a dependency to the data files that the script
-analyses.
+:   A synonym for [source](#source).
 
 [function]{#function}
-:   A built-in [Make](#make) utility that performs some operation, for
+:   A [Python](#glossary-python), [SCons](#scons), or user-defined function that performs some operation, for
 example gets a list of files matching a pattern.
+
+[Glob]{#glossary-glob}
+:   A pattern matching search function provided by [SCons](#scons): [Glob][glob].
 
 [incremental build]{#incremental-build}
 :   The feature of a [build manager](#build-manager) by
 which it only rebuilds files that, either directory
 or indirectly, depend on a file that was changed.
-
-[macro]{#macro}
-:   Used as a synonym for [variable](#variable) in certain versions of
-[Make](#make).
 
 [Make]{#make}
 :   A popular [build manager](#build-manager), from GNU, created in 1977.
@@ -365,31 +344,33 @@ or indirectly, depend on a file that was changed.
 :   A [build file](#build-file) used by [Make](#make), which, by
 default, are named `Makefile`.
 
-[pattern rule]{#pattern-rule}
-:   A [rule](#rule) that specifies a general way to build or update an
-entire class of files that can be managed the same way. For
-example, a pattern rule can specify how to compile any C file
-rather than a single, specific C file, or, to analyze any data
-file rather than a single, specific data file. Pattern rules
-typically make use of [automatic variables](#automatic-variable)
-and [wildcards](#wildcard).
-
-[phony target]{#phony-target}
-:   A [target](#target) that does not correspond to a file or other
-object. Phony targets are usually symbolic names for sequences of
-[actions](#action).
-
 [prerequisite]{#prerequisite}
-:   A synonym for [dependency](#dependency).
+:   A synonym for [source](#source).
 
-[reference]{#reference}
-:   A request that [Make](#make) substitutes the name of a
-[variable](#variable) for its value.
+[Python]{#glossary-python}
+:   A commonly used programming language in computational science and engineering.
 
-[rule]{#rule}
-:   A specification of a [target](#target)'s
-[dependencies](#dependency) and what [actions](#action) need to be
-executed to build or update the target.
+[SCons]{#scons}
+:   A [Python](#glossary-python)-based, open-source [build manager](#build-manager) based on the `ScCons` build tool
+designed for a Software Carpentry Build competition in August 2000: [SCons][scons].
+
+[SConstruct]{#sconstruct}
+:   The primary [configuration file](#configuration-file) for the [SCons](#scons) [build
+manager](#build-manager).
+
+[SConscript]{#sconscript}
+:   The conventional name for secondary [configuration file](#configuration-file)s for the
+[SCons](#scons) [build manager](#build-manager).
+
+[source]{#source}
+:   A file that a [target](#target) depends on. If any of a target's [sources](#source) are newer
+than the target itself, the target needs to be updated. A target's sources are also called its
+[prerequisites](#prerequisite) or [dependencies](#dependency). If a target's sources do not exist,
+then they need to be built first.
+
+[special variable]{#special-variable}
+:   A reserved [variable](#variable) that [SCons](#scons) will substitute with its value in action
+strings.
 
 [stem]{#stem}
 :   The part of the target that was matched by the pattern rule. If
@@ -397,19 +378,18 @@ the target is `file.dat` and the target pattern was `%.dat`, then
 the stem `$*` is `file`.
 
 [target]{#target}
-:   A thing to be created or updated, for example a file. Targets can
-have [dependencies](#dependency) that must exist, and be
-up-to-date, before the target itself can be built or updated.
+:   A thing to be created or updated, for example a file. Targets can have [sources](#source) that
+must exist, and be up-to-date, before the target itself can be built or updated.
+
+[task]{#task}
+:   A specification of a [target](#target)'s [sources](#source) and what [actions](#action) need to
+be executed to build or update the target.
 
 [variable]{#variable}
-:   A symbolic name for something in a [Makefile](#makefile).
+:   A symbolic name for something in an [SCons](#scons) configuration file.
 
 [wildcard]{#wildcard}
-:   A pattern that can be specified in [dependencies](#dependency) and
-[targets](#target). If [Make](#make) finds a dependency matching
-the pattern, then the pattern is substituted into the
-target. wildcards are often used in [pattern
-rules](#pattern-rule). The Make wildcard is `%`.
+:   A pattern that can be specified in the [Glob](#glossary-glob) function search for files.
 
 [gnu-make-manual]: https://www.gnu.org/software/make/manual/
 [options-summary]: https://www.gnu.org/software/make/manual/html_node/Options-Summary.html
