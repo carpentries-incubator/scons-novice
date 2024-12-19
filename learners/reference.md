@@ -14,7 +14,6 @@ $ scons
 
 SCons will look for a configuration file called `SConstruct` and will build the
 default target(s).
-.
 
 To use a configuration file with a different name, use the `--sconstruct` option e.g.
 
@@ -57,8 +56,8 @@ TBD
 
 ## Configuration files
 
-SCons uses Python as the configuration file language. Tasks can be defined in Python class/function
-call syntax.
+SCons uses [Python][python] as the [configuration language][configuration-language]. Tasks can be
+defined in Python class/function call syntax.
 
 Tasks:
 
@@ -90,6 +89,8 @@ Dependencies:
 
 Comments:
 
+
+
 ```python
 # SCons uses Python for its configuration language. This is a Python comment.
 ```
@@ -112,18 +113,31 @@ archive = [
 - Python allows you to split up a list over multiple lines, to make them easier to read.
 - Python will combine the multiple lines into a single list
 
+Cleaning targets:
+
+SCons can clean specific targets with the `--clean` option
+
+```bash
+$ scons target --clean
+```
+
+and clean all targets with the `.` special target
+
+```bash
+$ scons . --clean
+```
+
 Alias targets:
 
-SCons can define [aliases](https://scons.org/doc/production/HTML/scons-man.html#f-Alias) as
-short-hand for collections of build targets.
+SCons can define [aliases][aliases] as short-hand for collections of build targets.
 
 ```python
-targets = Command(
+target_nodes = Command(
     target=["target1", "target2"],
     source=["source"],
     action=["action"]
 )
-Alias("target", targets)
+Alias("target_alias", target_nodes)
 ```
 
 - Alias targets are a short-hand for building target lists.
@@ -140,87 +154,148 @@ task construction. A few common use cases are mentioned here.
 - `$TARGETS` denotes 'the dependencies of the current task'.
 - `$TARGET.filebase` denotes 'the stem of the first target of the current task'.
 
-Pattern rules:
+Builders:
 
-```make
-%.dat : books/%.txt $(COUNT_SRC)
-	$(COUNT_EXE) $< $@
+SCons users can write custom
+[builders][builders] for commonly
+re-used actions.
+
+```python
+my_builder = Builder(
+    action=["action"]
+)
+env = Environment(BUILDERS={"MyBuilder": my_builder})
+env.MyBuilder(
+    target=["target"],
+    source=["source"]
+)
 ```
 
-- The Make wildcard, `%`, specifies a pattern.
-- If Make finds a dependency matching the pattern, then the pattern is
-  substituted into the target.
-- The Make wildcard can only be used in targets and dependencies.
-- e.g. if Make found a file called `books/abyss.txt`, it would set the
-  target to be `abyss.dat`.
+Psuedo-builders:
+
+SCons users can write custom [pseudo-builders][pseudo-builders] to handle common file types or
+Builder argument parsing.
+
+```python
+import pathlib
+
+
+def count_books(env, name, count_executable="python", count_source="count_words.py"):
+    target = [f"{name}.dat"]
+    source = [
+        pathlib.Path("books") / f"{name}.txt",
+        count_source,
+    ]
+    target_nodes = env.Command(
+        target=target,
+        source=source,
+        action=["${count_executable} ${count_source} ${TARGET} ${SOURCES}"],
+        count_executable=count_executable,
+        count_source=count_source,
+    )
+    return target_nodes
+
+
+env = Environment()
+env.AddMethod("CountBooks", count_books)
+env.CountBooks("isles")
+env.CountBooks("abyss")
+```
 
 Defining and using variables:
 
-```make
-COUNT_SRC=wordcount.py
-COUNT_EXE=python $(COUNT_SRC)
+SCons uses [Python][python] as the [configuration language][configuration-language]. Variables may
+be defined in Python syntax.
+
+```python
+count_source="wordcount.py"
+count_executable=f"python {count_source}"
 ```
 
-- A variable is assigned a value. For example, `COUNT_SRC`
-  is assigned the value `wordcount.py`.
-- `$(...)` is a reference to a variable. It requests that
-  Make substitutes the name of a variable for its value.
+- A variable is assigned a value. For example, `count_source`
+  is assigned the string `"wordcount.py"`.
+- [f-string][f-string] syntax
+  allows string construction from variables. The value of `count_source` will be used in the string
+  construction of `count_exectuable`.
 
 Suppress printing of actions:
 
-```make
-.PHONY : variables
-variables:
-	@echo TXT_FILES: $(TXT_FILES)
+SCons provides several mechanisms to control output. The `-Q` flag suppresses printing of all
+progress messages. Task actions may suppress printing commands with a preceding `@` symbol.
+
+```python
+target_nodes = Command(
+    target=["target"],
+    source=["source"],
+    action=["@action"],
+)
+Alias("target", target_nodes)
 ```
 
-- Prefix an action by `@` to instruct Make not to print that action.
+- Prefix an action by `@` to instruct SCons not to print that action.
 
-Include the contents of a Makefile in another Makefile:
+Multiple configuration files:
 
-```make
-include config.mk
+SCons provides the option to call more than one configuration file with the [SConscript][SConscript]
+function. These are conventionally named `SConscript`, but could take any file name.
+
+```python
+SConscript("SConscript")
+SConscript("configuration")
 ```
 
 wildcard function:
 
-```make
-TXT_FILES=$(wildcard books/*.txt)
+SCons provides a [Glob][Glob] method to construct lists of files.
+
+```python
+text_files=Glob("books/*.txt")
 ```
 
 - Looks for all files matching a pattern e.g. `books/*.txt`, and
   return these in a list.
-- e.g. `TXT_FILES` is set to `books/abyss.txt books/isles.txt books/last.txt books/sierra.txt`.
+- e.g. `text_files` is set to `["books/abyss.txt", "books/isles.txt", "books/last.txt",
+  "books/sierra.txt"]`.
 
-patsubst ('path substitution') function:
+List comprehensions:
 
-```make
-DAT_FILES=$(patsubst books/%.txt, %.dat, $(TXT_FILES))
+Python has a [list comprehension][list-comprehension] feature for constructing lists. In combination
+with the [pathlib][pathlib] OS agnostic path manipulation can be performed on lists of files.
+
+```python
+import pathlib
+text_files = ["books/abyss.txt", "books/isles.txt", "books/last.txt", "books/sierra.txt"]
+text_paths = [pathlib.Path(book) for book in text_files]
+data_paths = [book.with_suffix("*.dat") for book in text_paths if book.parent == "books" and book.suffix == ".txt"]
+data_files = [str(book) for book in book_paths]
 ```
 
-- Every string that matches `books/%.txt` in `$(TXT_FILES)` is
-  replaced by `%.dat` and the strings are returned in a list.
-- e.g. if `TXT_FILES` is `books/abyss.txt books/isles.txt books/last.txt books/sierra.txt` this sets `DAT_FILES` to `abyss.dat isles.dat last.dat sierra.dat`.
+- Every string that matches `books/*.txt` in `text_paths` is replaced by `*.dat` and the strings are
+  returned in a list.
+- e.g. if `text_files` is `["books/abyss.txt", "books/isles.txt", "books/last.txt",
+  "books/sierra.txt"]` this sets `data_files` to `["books/abyss.dat", "books/isles.dat",
+  "books/last.dat", "books/sierra.dat"]`.
+- SCons >= 4.6 can operate on pathlib objects natively, so the final conversion back to strings is
+  not strictly necessary.
 
 Default targets:
 
-- In Make version 3.79 the default target is the first target in the
-  Makefile.
-- In Make 3.81, the default target can be explicitly set using the
-  special variable `.DEFAULT_GOAL` e.g.
+SCons has a [Default][Default] function for changing the default target list.
 
-```make
-.DEFAULT_GOAL := all
+- Unless otherwise specified, all targets are part of the default targets list.
+- If the `Default` method is called, only those targets explicitly included are part of the default
+  targets list
+
+```python
+Default(target_nodes)
 ```
 
 ## Manuals
 
-[GNU Make Manual][gnu-make-manual]. Reference sections include:
+[SCons Documentation][scons-documentation] includes
 
-- [Summary of Options][options-summary] for the `make` command.
-- [Quick Reference][quick-reference] of Make directives, text manipulation functions, and special variables.
-- [Automatic Variables][automatic-variables].
-- [Special Built-in Target Names][special-targets]
+- [SCons User Guide][scons-user]
+- [SCons Manpage][scons-man]
 
 ## Glossary
 
@@ -342,5 +417,17 @@ rules](#pattern-rule). The Make wildcard is `%`.
 [automatic-variables]: https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 [special-targets]: https://www.gnu.org/software/make/manual/html_node/Special-Targets.html
 
-
-
+[python]: https://www.python.org/
+[scons-documentation]: https://scons.org/documentation.html
+[scons-user]: https://scons.org/doc/production/HTML/scons-user.html
+[scons-man]: https://scons.org/doc/production/HTML/scons-man.html
+[configuration-language]: https://scons.org/doc/production/HTML/scons-user.html#sect-sconstruct-python
+[builders]: https://scons.org/doc/production/HTML/scons-user.html#chap-builders-writing
+[aliases]: https://scons.org/doc/production/HTML/scons-man.html#f-Alias
+[pseudo-builders]: https://scons.org/doc/production/HTML/scons-user.html#chap-add-method
+[f-string]: https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals
+[SConscript]: https://scons.org/doc/production/HTML/scons-user.html#sect-sconscript-files
+[Glob]: https://scons.org/doc/production/HTML/scons-man.html#f-Glob
+[list-comprehension]: https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
+[pathlib]: https://docs.python.org/3/library/pathlib.html
+[Default]: https://scons.org/doc/production/HTML/scons-user.html#sect-default-targets-function
