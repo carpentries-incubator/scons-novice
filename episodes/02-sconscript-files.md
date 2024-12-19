@@ -30,7 +30,7 @@ import os
 env = Environment(os.environ.copy())
 
 # Count words.
-Command(
+env.Command(
     target=["isles.dat"],
     source=["books/isles.txt"],
     action=["python countwords.py books/isles.txt isles.dat"],
