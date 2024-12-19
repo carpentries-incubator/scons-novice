@@ -1,8 +1,8 @@
 # scons-novice
 
 Adapted from
-[https://swcarpentry.github.io/make-novice/](https://swcarpentry.github.io/make-novice/) source
-repository at commit [ba7c2dd](https://github.com/swcarpentry/make-novice)
+[https://swcarpentry.github.io/scons-novice/](https://swcarpentry.github.io/scons-novice/) source
+repository at commit [ba7c2dd](https://github.com/swcarpentry/scons-novice)
 
 The following instructions are adopted from https://carpentries.github.io/workbench/
 
@@ -37,10 +37,10 @@ $ R -e 'sandpaper::build_lesson(preview = FALSE)'
 [![Create a Slack Account with us](https://img.shields.io/badge/Create_Slack_Account-The_Carpentries-071159.svg)](https://slack-invite.carpentries.org/)
 [![Slack Status](https://img.shields.io/badge/Slack_Channel-swc--make-E01563.svg)](https://carpentries.slack.com/messages/C9X2YCPT5)
 
-# make-novice
+# scons-novice
 
 An introduction to Make using reproducible papers as a motivating example.
-Please see [https://swcarpentry.github.io/make-novice/](https://swcarpentry.github.io/make-novice/) for a rendered version
+Please see [https://swcarpentry.github.io/scons-novice/](https://swcarpentry.github.io/scons-novice/) for a rendered version
 of this material, [the lesson template documentation][lesson-example]
 for instructions on formatting, building, and submitting material,
 or run `make` in this directory for a list of helpful commands.

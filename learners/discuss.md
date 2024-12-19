@@ -203,7 +203,7 @@ occurring research activities using Make:
 [episode 2](../episodes/02-makefiles.md).
 
 A more detailed discussion can be read on
-[issue 98](https://github.com/swcarpentry/make-novice/issues/98#issuecomment-307361751).
+[issue 98](https://github.com/swcarpentry/scons-novice/issues/98#issuecomment-307361751).
 
 [gnu-make-parallel]: https://www.gnu.org/software/make/manual/html_node/Parallel.html
 [makefile-variable]: https://stackoverflow.com/questions/448910/makefile-variable-assignment
