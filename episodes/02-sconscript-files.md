@@ -34,8 +34,11 @@ Command(
 
 This is a [build file](../learners/reference.md#build-file), which for SCons is called an
 [SConscript](../learners/reference.md#makefile) file - a file executed by SCons. `SConstruct` is the
-conventional name for the root `SConscript` files, which is the generic name for all SCons build
-files.
+conventional name for the root configuration file. Secondary configuration files are named
+`SConscript` by convention, but can take any filename. Together all SCons configuration files take
+the generic name `SConscript` files. From now on, SCons configuration files will be referred to
+collectively as `SConscript` files, but it is important to remember that projects usually start with
+the `SConstruct` file naming convention.
 
 The syntax should be familiar to [Python](https://www.python.org/) users because SCons uses Python
 as the configuration language. Note how the action resembles a line from our shell script.
@@ -72,27 +75,24 @@ files we created earlier:
 $ rm *.dat *.png
 ```
 
-By default, Make looks for a Makefile, called `Makefile`, and we can
-run Make as follows:
+By default, SCons looks for a root SConscript file, called `SConstruct`, and we can
+run SCons as follows:
 
 ```bash
-$ make
+$ scons
 ```
 
-By default, Make prints out the actions it executes:
+By default, SCons prints several status messages and the actions it executes:
 
 ```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
 python countwords.py books/isles.txt isles.dat
+scons: done building targets.
 ```
 
-If we see,
-
-```error
-Makefile:3: *** missing separator.  Stop.
-```
-
-then we have used a space instead of a TAB characters to indent one of
-our actions.
+The status messages can be silenced with the `-Q` option.
 
 Let's see if we got what we expected.
 
@@ -104,30 +104,35 @@ The first 5 lines of `isles.dat` should look exactly like before.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Makefiles Do Not Have to be Called `Makefile`
+## The SConstruct File Does Not Have to be Called `SConstruct`
 
-We don't have to call our Makefile `Makefile`. However, if we call it
-something else we need to tell Make where to find it. This we can do
-using `-f` flag. For example, if our Makefile is named `MyOtherMakefile`:
+We don't have to call our root SCons configuration file `SConstruct`. However, if we call it
+something else we need to tell SCons where to find it. This we can do using `-f` flag. For example,
+if our SConstruct file is named `MyOtherSConstruct`:
 
 ```bash
-$ make -f MyOtherMakefile
+$ scons -f MyOtherSConstruct
 ```
 
-Sometimes, the suffix `.mk` will be used to identify Makefiles that
-are not called `Makefile` e.g. `install.mk`, `common.mk` etc.
+SCons does not require a specific file extension. The suffix `.scons` can be used to identify
+SConscript files that are not called `SConstruct` or `SConscript` e.g. `install.scons`,
+`common.scons` etc.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-When we re-run our Makefile, Make now informs us that:
+When we re-run our SConstruct file, SCons now informs us that:
 
 ```output
-make: `isles.dat' is up to date.
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+scons: done building targets.
 ```
 
 This is because our target, `isles.dat`, has now been created, and
-Make will not create it again. To see how this works, let's pretend to
+SCons will not create it again. To see how this works, let's pretend to
 update one of the text files. Rather than opening the file in an
 editor, we can use the shell `touch` command to update its timestamp
 (which would happen if we did edit the file):
@@ -150,38 +155,94 @@ than `books/isles.txt`, its dependency:
 -rw-r--r--    1 mjj      Administ   182273 Jun 12 09:58 isles.dat
 ```
 
-If we run Make again,
+If we run SCons again,
 
 ```bash
-$ make
+$ scons
 ```
 
-then it recreates `isles.dat`:
+it does not recreate `isles.dat`.
 
 ```output
-python countwords.py books/isles.txt isles.dat
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+scons: done building targets.
 ```
 
-When it is asked to build a target, Make checks the 'last modification
-time' of both the target and its dependencies. If any dependency has
-been updated since the target, then the actions are re-run to update
-the target. Using this approach, Make knows to only rebuild the files
-that, either directly or indirectly, depend on the file that
-changed. This is called an [incremental
+Many build managers, such as [GNU Make](../episodes/01-intro.md#gnu-make) use timestamps to track
+the state of source and target files. If we were using GNU Make, Make would have re-created the
+`isles.dat` file.
+
+By default SCons computes content signatures from the file content to track the state of source and
+target files. If the content of a file has not changed, it is considered up-to-date and SCons will
+not create it again. Computing the content signature takes more time than checking a timestamp, so
+SCons provides an option to use the more traditional timestamp state. However, in computational science and
+engineering workflows, which often contain tasks requiring hours or days to compute, the added time
+required to check file content is often a valuable trade-off because it avoids launching
+long-running tasks more robustly than a simple timestamp check.
+
+To observe SCons re-creating the target `isles.dat`, we must actually modify the `books/isles.txt`
+file. Any change to the file contents, even adding a newline, will change the content signature
+computed as an `md5sum`. If we run the `md5sum` ourselves, we can see the signature change before
+and after the file edit.
+
+```bash
+md5sum books/isles.dat
+```
+
+```output
+6cc2c020856be849418f9d744ac1f5ee  books/isles.txt
+```
+
+```bash
+echo "" >> books/isles.txt
+```
+
+We can see that appending a blank newline changes the computed content signature.
+
+```bash
+md5sum books/isles.dat
+```
+
+```output
+22b5adfc3b267e2e658ba75de4aeb74b  books/isles.txt
+```
+If we run SCons again, it will re-create `isles.dat` because the content of the source file
+`books/isles.txt` has changed.
+
+```bash
+$ scons
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+python countwords.py books/isles.txt isles.dat
+scons: done building targets.
+```
+
+When it is asked to build a target, SCons checks the 'content signature' of both the target and its
+sources and the 'action signature' of the associated action list. If any source or action content
+has changed since the target was built, then the actions are re-run to update the target. Using this
+approach, SCons knows to only rebuild the files that, either directly or indirectly, depend on the
+file that changed. This is called an [incremental
 build](../learners/reference.md#incremental-build).
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Makefiles as Documentation
+## SConscript Files as Documentation
 
 By explicitly recording the inputs to and outputs from steps in our
-analysis and the dependencies between files, Makefiles act as a type
+analysis and the dependencies between files, SConscript files act as a type
 of documentation, reducing the number of things we have to remember.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Let's add another rule to the end of `Makefile`:
+Let's add another task to the end of `SConstruct`:
 
 ```make
 abyss.dat : books/abyss.txt

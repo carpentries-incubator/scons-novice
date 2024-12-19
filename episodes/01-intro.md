@@ -281,7 +281,7 @@ requirements, intended usage, and operating system. However, they all share the 
 concepts as SCons.
 
 Also, you might come across build generation scripts e.g. [GNU
-Autoconf][autoconf] and [CMake][cmake].  Those tools do not run the
+Autoconf][autoconf] and [CMake][cmake]. Those tools do not run the
 pipelines directly, but rather generate files for use with the build
 tools.
 
