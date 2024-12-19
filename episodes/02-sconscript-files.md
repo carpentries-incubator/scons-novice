@@ -397,8 +397,6 @@ Removed abyss.dat
 scons: done cleaning targets.
 ```
 
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
 We may want to simplify specification of some, but not all, targets. We can add an alias to
 reference all of the data files.
 
@@ -514,6 +512,8 @@ our SConstruct file, involved in building the `dats` target:
 
 The starting SConstruct file is [here](files/code/02-sconscript-files/SConstruct).
 
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
 :::::::::::::::  solution
 
 ## Solution
@@ -523,8 +523,6 @@ See [this file](files/code/02-sconscript-files-challenge/SConstruct) for a solut
 
 
 :::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
 
 The following figure shows the dependencies embodied within our
 SConstruct file, involved in building the `results.txt` target:
