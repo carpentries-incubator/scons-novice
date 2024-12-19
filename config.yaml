@@ -60,7 +60,7 @@ contact: 'team@carpentries.org'
 # Order of episodes in your lesson
 episodes:
 - 01-intro.md
-- 02-makefiles.md
+- 02-sconscript-files.md
 - 03-variables.md
 - 04-dependencies.md
 - 05-patterns.md
