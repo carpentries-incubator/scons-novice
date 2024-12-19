@@ -263,7 +263,7 @@ of documentation, reducing the number of things we have to remember.
 Let's add another task to the end of `SConstruct`:
 
 ```python
-Command(
+env.Command(
     target=["abyss.dat"],
     source=["books/absyss.txt"],
 	  action=["python countwords.py books/abyss.txt abyss.dat"],
