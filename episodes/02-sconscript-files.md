@@ -539,6 +539,8 @@ SConstruct file, involved in building the `results.txt` target:
 - Use `#` for comments in SConscript files.
 - Write tasks as lists of targets, sources, and actions with the `Command` class
 - Use an `Alias` to collect targets in a convenient alias for shorter build commands.
+- Use the `Default` function to limit the number of default targets from all targets to some subset
+  of targets.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
