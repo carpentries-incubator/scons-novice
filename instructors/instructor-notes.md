@@ -24,16 +24,16 @@ The overall lesson can be done in 3.5 hours.
 
 Solutions for challenges are used in subsequent topics.
 
-A number of example Makefiles, including sample solutions to challenges,
+A number of example SConscript files, including sample solutions to challenges,
 are in subdirectories of `code` for the corresponding episodes.
 
 It can be useful to use two windows during the lesson, one with the terminal
-where you run the `make` commands, the other with the Makefile opened in a text
-editor all the time. This makes it possible to refer to the Makefile while
+where you run the `scons` commands, the other with the SConscript file(s) opened in a text
+editor all the time. This makes it possible to refer to the SConscript file while
 explaining the output from the commandline, for example. Make sure, though,
 that the text in both windows is readable from the back of the room.
 
-## Setting up Make
+## Setting up SCons
 
 Recommend instructors and students use `nano` as the text editor for
 this lesson because
@@ -47,14 +47,14 @@ Please point out to students during setup that they can and should use
 another text editor if they're already familiar with it.
 
 Instructors and students should use two shell windows: one for running
-nano, and one for running Make.
+nano, and one for running SCons.
 
-Check that all attendees have Make installed and that it runs
+Check that all attendees have SCons installed and that it runs
 correctly, before beginning the session.
 
 ## Code and Data Files
 
-Python scripts to be invoked by Make are in `code/`.
+Python scripts to be invoked by SCons are in `code/`.
 
 Data files are in `data/books`.
 
@@ -75,9 +75,14 @@ To recreate `scons-lesson.zip`, run:
 $ make scons-lesson.zip
 ```
 
-## Beware of Spaces!
+## Beware file extensions and spaces!
 
-The single most commonly occurring problem will be students using
+The most commonly occurring problem is likely to be confusion over file extensions. By defualt
+`SConstruct` and `SConscript` files do not have extensions. Some text editors and file managers may
+add default extensions as `*.txt` or `*.py`. This can be particularly confusing to debug if a
+student's file manager hides the extension by default, e.g. Windows File Explorer.
+
+A commonly occurring problem will be students using
 spaces instead of TABs when indenting actions.
 
 ## Makefile Dependency Images
@@ -165,15 +170,6 @@ $ export LANG=en_US.UTF-8
 $ export LANGUAGE=en_US.UTF-8
 ```
 
-## Beware of different Make implementations!
-
-The lesson is based on GNU Make. Although it is very rare, on some systems
-(e.g. AIX) you might find `make` not pointing to GNU Make and `gmake` needs to
-be used instead.
-
 [zipfile]: files/scons-lesson.zip
 [makefile2graph]: https://github.com/lindenb/makefile2graph
 [graphviz]: https://www.graphviz.org/
-
-
-
