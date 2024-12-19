@@ -370,8 +370,8 @@ than the target itself, the target needs to be updated. A target's sources are a
 then they need to be built first.
 
 [special variable]{#special-variable}
-:   A reserved [variable](#variable) that [SCons](#scons) will substitute with its value in action
-strings.
+:   A reserved substitution [variable](#variable) that [SCons](#scons) will substitute with its
+value in action strings.
 
 [stem]{#stem}
 :   The part of the target that was matched by the pattern rule. If

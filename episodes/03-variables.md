@@ -1,54 +1,65 @@
 ---
-title: Automatic Variables
+title: Special Substitution Variables
 teaching: 10
 exercises: 5
 ---
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Use Make automatic variables to remove duplication in a Makefile.
+- Use SCons special substitution variables to remove duplication in a Makefile.
 - Explain why shell wildcards in dependencies can cause problems.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I abbreviate the rules in my Makefiles?
+- How can I abbreviate the tasks in my SConscript files?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-After the exercise at the end of the previous episode, our Makefile looked like
+After the exercise at the end of the previous episode, our SConstruct file looked like
 this:
 
-```make
-# Generate summary table.
-results.txt : isles.dat abyss.dat last.dat
-	python testzipf.py abyss.dat isles.dat last.dat > results.txt
+```python
+import os
 
-# Count words.
-.PHONY : dats
-dats : isles.dat abyss.dat last.dat
 
-isles.dat : books/isles.txt
-	python countwords.py books/isles.txt isles.dat
+env = Environment(ENV=os.environ.copy())
 
-abyss.dat : books/abyss.txt
-	python countwords.py books/abyss.txt abyss.dat
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py books/isles.txt isles.dat"],
+)
 
-last.dat : books/last.txt
-	python countwords.py books/last.txt last.dat
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt"],
+	action=["python countwords.py books/abyss.txt abyss.dat"],
+)
 
-.PHONY : clean
-clean :
-	rm -f *.dat
-	rm -f results.txt
+env.Command(
+    target=["last.dat"],
+    source=["books/last.txt"],
+	action=["python countwords.py books/last.txt last.dat"],
+)
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py abyss.dat isles.dat last.dat > results.txt"],
+)
+
+env.Default(["results.txt"])
 ```
 
-Our Makefile has a lot of duplication. For example, the names of text
+Our SConstruct file has a lot of duplication. For example, the names of text
 files and data files are repeated in many places throughout the
-Makefile. Makefiles are a form of code and, in any code, repeated code
+file. SConscript files are a form of code and, in any code, repeated code
 can lead to problems e.g. we rename a data file in one part of the
-Makefile but forget to rename it elsewhere.
+SConscript file but forget to rename it elsewhere.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
@@ -68,52 +79,65 @@ principle or D.R.Y.
 
 Let us set about removing some of the repetition from our Makefile.
 
-In our `results.txt` rule we duplicate the data file names and the
+In our `results.txt` task we duplicate the data file names and the
 name of the results file name:
 
-```make
-results.txt : isles.dat abyss.dat last.dat
-	python testzipf.py abyss.dat isles.dat last.dat > results.txt
+```python
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py abyss.dat isles.dat last.dat > results.txt"],
+)
 ```
 
 Looking at the results file name first, we can replace it in the action
-with `$@`:
+with `${TARGET}`:
 
-```make
-results.txt : isles.dat abyss.dat last.dat
-	python testzipf.py abyss.dat isles.dat last.dat > $@
+```python
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py abyss.dat isles.dat last.dat > ${TARGET}"],
+)
 ```
 
-`$@` is a Make
-[automatic variable](../learners/reference.md#automatic-variable)
-which means 'the target of the current rule'. When Make is run it will
+`${TARGET}` is an SCons
+[special variable](../learners/reference.md#special-variable)
+which means 'the target of the current task'. When SCons is run it will
 replace this variable with the target name.
 
-We can replace the dependencies in the action with `$^`:
+We can replace the sources in the action with `${SOURCES}`:
 
 ```make
-results.txt : isles.dat abyss.dat last.dat
-	python testzipf.py $^ > $@
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py ${SOURCES} > ${TARGET}"],
+)
 ```
 
-`$^` is another automatic variable which means 'all the dependencies
-of the current rule'. Again, when Make is run it will replace this
-variable with the dependencies.
+`${SOURCES}` is another special substitution variable which means 'all the dependencies
+of the current task'. Again, when SCons is run it will replace this
+variable with the sources.
 
-Let's update our text files and re-run our rule:
+Let's update our text files and re-run our task:
 
 ```bash
-$ touch books/*.txt
-$ make results.txt
+$ echo "" | tee -a books/*.txt
+$ scons results.txt
 ```
 
 We get:
 
 ```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
 python countwords.py books/isles.txt isles.dat
 python countwords.py books/abyss.txt abyss.dat
 python countwords.py books/last.txt last.dat
 python testzipf.py isles.dat abyss.dat last.dat > results.txt
+scons: done building targets.
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
@@ -124,7 +148,7 @@ What will happen if you now execute:
 
 ```bash
 $ touch *.dat
-$ make results.txt
+$ scons results.txt
 ```
 
 1. nothing
@@ -136,57 +160,70 @@ $ make results.txt
 
 ## Solution
 
-`4.` Only `results.txt` recreated.
+``1.` Nothing.
 
-The rules for `*.dat` are not executed because their corresponding `.txt` files
-haven't been modified.
+The content of the `*.dat` has not changed, so `results.txt` is up to date.
 
 If you run:
 
 ```bash
-$ touch books/*.txt
-$ make results.txt
+$ echo "" | tee -a books/*.txt
+$ scons results.txt
 ```
 
 you will find that the `.dat` files as well as `results.txt` are recreated.
 
+If you run:
+
+```bash
+$ echo "manually-edited-ouput-is-bad 1 0.1" | tee -a *.dat
+$ scons results.txt
+```
+
+you will find that the `results.txt` file is recreated because the content signature of the `.dat`
+files has changed. If you run this command, be sure to clean the `.dat` files to remove the manually
+edited lines.
+
+```bash
+scons dats --clean
+```
 
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-As we saw, `$^` means 'all the dependencies of the current rule'. This
+As we saw, `${SOURCES}` means 'all the dependencies of the current task'. This
 works well for `results.txt` as its action treats all the dependencies
 the same - as the input for the `testzipf.py` script.
 
-However, for some rules, we may want to treat the first dependency
-differently. For example, our rules for `.dat` use their first (and
+However, for some tasks, we may want to treat the first dependency
+differently. For example, our tasks for `.dat` use their first (and
 only) dependency specifically as the input file to `countwords.py`. If
 we add additional dependencies (as we will soon do) then we don't want
 these being passed as input files to `countwords.py` as it expects only
 one input file to be named when it is invoked.
 
-Make provides an automatic variable for this, `$<` which means 'the
-first dependency of the current rule'.
+SCons provides allows Python-ic, zero-based indexing of special substitution variables
+``${SOURCES}`` and ``${TARGETS}`` for this use case. For example, `${SOURCES[0]}` means 'the first
+dependency of the current task'.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Rewrite `.dat` Rules to Use Automatic Variables
+## Rewrite `.dat` Tasks to Use Special Substitution Variables
 
-Rewrite each `.dat` rule to use the automatic variables `$@` ('the
-target of the current rule') and `$<` ('the first dependency of the
-current rule').
-[This file](files/code/03-variables/Makefile) contains
-the Makefile immediately before the challenge.
+Rewrite each `.dat` task to use the special substitution variables `${TARGET}` ('the
+target of the current task') and `${SOURCES[0]}` ('the first dependency of the
+current task').
+[This file](files/code/03-variables/SConstruct) contains
+the SConstruct immediately before the challenge.
 
 :::::::::::::::  solution
 
 ## Solution
 
-See [this file](files/code/03-variables-challenge/Makefile)
+See [this file](files/code/03-variables-challenge/SConstruct)
 for a solution to this challenge.
-
 
 
 :::::::::::::::::::::::::
@@ -195,10 +232,9 @@ for a solution to this challenge.
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `$@` to refer to the target of the current rule.
-- Use `$^` to refer to the dependencies of the current rule.
-- Use `$<` to refer to the first dependency of the current rule.
+- Use `${TARGET}` to refer to the target of the current task.
+- Use `${SOURCES}` to refer to the dependencies of the current task.
+- Use `${SOURCES[0]}` to refer to the first dependency of the current task.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
