@@ -45,7 +45,7 @@ Add new rules, update existing rules, and add new variables to:
 
 ## Solution
 
-[This Makefile](files/code/09-conclusion-challenge-1/SConstruct)
+[This SConstruct](files/code/09-conclusion-challenge-1/SConstruct)
 contains a simple solution to this challenge.
 
 A more elegant solution would be to re-write the `count_words` pseudo-builder as a generic, two-file
@@ -74,47 +74,26 @@ target, once we've added support for images:
 Often it is useful to create an archive file of your project that includes all data, code
 and results. An archive file can package many files into a single file that can easily be
 downloaded and shared with collaborators. We can add steps to create the archive file inside
-the Makefile itself so it's easy to update our archive file as the project changes.
+the SConstruct itself so it's easy to update our archive file as the project changes.
 
-Edit the Makefile to create an archive file of your project.  Add new rules, update existing
+Edit the SConstruct to create an archive file of your project. Add new rules, update existing
 rules and add new variables to:
 
-- Create a new directory called `zipf_analysis` in the project directory.
+- Create a `zipf_analysis.tar.gz` archive including our code, data, plots, the Zipf summary table,
+  the SConstruct file with the SCons
+  [`Tar` builder](https://scons.org/doc/production/HTML/scons-man.html#b-Tar).
 
-- Copy all our code, data, plots, the Zipf summary table, the Makefile and config.mk
-  to this directory.
-  The `cp -r` command can be used to copy files and directories
-  into the new `zipf_analysis` directory:
-
-  ```bash
-  $ cp -r [files and directories to copy] zipf_analysis/
-  ```
-
-- Hint: create a new variable for the `books` directory so that it can be
-  copied to the new `zipf_analysis` directory
-
-- Create an archive, `zipf_analysis.tar.gz`, of this directory. The
-  bash command `tar` can be used, as follows:
-
-  ```bash
-  $ tar -czf zipf_analysis.tar.gz zipf_analysis
-  ```
-
-- Update the target `all` so that it creates `zipf_analysis.tar.gz`.
-
-- Remove `zipf_analysis.tar.gz` when `make clean` is called.
+- Update the default targets list so that it creates `zipf_analysis.tar.gz`.
 
 - Print the values of any additional variables you have defined when
-  `make variables` is called.
+  `scons --variables` is called.
 
 :::::::::::::::  solution
 
 ## Solution
 
-[This Makefile](files/code/09-conclusion-challenge-2/Makefile)
-and [this `config.mk`](files/code/09-conclusion-challenge-2/config.mk)
-contain a solution to this challenge.
-
+[This Makefile](files/code/09-conclusion-challenge-2/SConstruct)
+contains a solution to this challenge.
 
 
 :::::::::::::::::::::::::
@@ -125,7 +104,7 @@ contain a solution to this challenge.
 
 ## Archiving the Makefile
 
-Why does the Makefile rule for the archive directory add the Makefile to our archive of code,
+Why does the SCons task for the archive directory add the SConstruct to our archive of code,
 data, plots and Zipf summary table?
 
 :::::::::::::::  solution
@@ -135,35 +114,9 @@ data, plots and Zipf summary table?
 Our code files (`countwords.py`, `plotcounts.py`, `testzipf.py`) implement
 the individual parts of our workflow. They allow us to create `.dat`
 files from `.txt` files, and `results.txt` and `.png` files from `.dat` files.
-Our Makefile, however, documents dependencies between
+Our SConstruct file, however, documents dependencies between
 our code, raw data, derived data, and plots, as well as implementing
-our workflow as a whole. `config.mk` contains configuration information
-for our Makefile, so it must be archived too.
-
-
-
-:::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
-:::::::::::::::::::::::::::::::::::::::  challenge
-
-## `touch` the Archive Directory
-
-Why does the Makefile rule for the archive directory `touch` the archive directory after moving our code, data, plots and summary table into it?
-
-:::::::::::::::  solution
-
-## Solution
-
-A directory's timestamp is not automatically updated when files are copied into it.
-If the code, data, plots, and summary table are updated and copied into the
-archive directory, the archive directory's timestamp must be updated with `touch`
-so that the rule that makes `zipf_analysis.tar.gz` knows to run again;
-without this `touch`, `zipf_analysis.tar.gz` will only be created the first time
-the rule is run and will not be updated on subsequent runs even if the contents
-of the archive directory have changed.
-
+our workflow as a whole.
 
 
 :::::::::::::::::::::::::
@@ -172,8 +125,8 @@ of the archive directory have changed.
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Makefiles save time by automating repetitive work, and save thinking by documenting how to reproduce results.
+- SCons and SConscript files save time by automating repetitive work, and save thinking by
+  documenting how to reproduce results.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 

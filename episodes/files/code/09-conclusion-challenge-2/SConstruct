@@ -11,6 +11,7 @@ TEXT_FILES = Glob("books/*.txt")
 DATA_FILES = [pathlib.Path(str(text_file)).with_suffix(".dat").name for text_file in TEXT_FILES]
 PNG_SOURCE = "plotcounts.py"
 PLOT_FILES = [pathlib.Path(data_file).with_suffix(".png").name for data_file in DATA_FILES]
+CODE_FILES = Glob("*.py")
 
 AddOption(
     "--variables",
@@ -20,9 +21,11 @@ AddOption(
 )
 if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]
+    code_file_strings = [str(node) for node in CODE_FILES]
     print(f"TEXT_FILES: {text_file_strings}")
     print(f"DATA_FILES: {DATA_FILES}")
     print(f"PLOT_FILES: {PLOT_FILES}")
+    print(f"CODE_FILES: {code_file_strings}")
     Exit(0)
 
 env = Environment(ENV=os.environ.copy())
@@ -73,7 +76,13 @@ for plot_file, data_file in zip(PLOT_FILES, DATA_FILES):
         language=LANGUAGE,
     )
 
-env.Default(["results.txt"] + PLOT_FILES)
+env.Tar(
+    target=["zipf_analysis.tar.gz"],
+    source=["SConstruct"] + CODE_FILES + PLOT_FILES + DATA_FILES + TEXT_FILES,
+    TARFLAGS="-c -z",
+)
+
+env.Default(["zipf_analysis.tar.gz", "results.txt"] + PLOT_FILES)
 
 help_message = "\nDefault Targets:\n"
 for target in DEFAULT_TARGETS:
