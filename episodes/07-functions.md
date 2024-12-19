@@ -116,7 +116,7 @@ documented as an early exit from configuration.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-If we run Make:
+If we run SCons:
 
 ```bash
 $ scons --variables
@@ -234,7 +234,7 @@ env.Command(
 )
 ```
 
-If we re-run Make:
+If we re-run SCons:
 
 ```bash
 $ scons . --clean
