@@ -93,7 +93,7 @@ print the `TEXT_FILES` value and exit configuration prior to building using Pyth
 AddOption(
     "--variables",
     action="store_true",
-    help="Print the text files returned by Glob and exit (default $(default))",
+    help="Print the text files returned by Glob and exit (default: %default)",
 )
 if GetOption("text_files"):
     text_file_strings = [str(node) for node in TEXT_FILES]
@@ -287,7 +287,8 @@ DATA_FILES = [pathlib.Path(str(text_file)).with_suffix(".dat").name for text_fil
 AddOption(
     "--variables",
     action="store_true",
-    help="Print the text files returned by Glob (default $(default))",
+    default=False,
+    help="Print the text files returned by Glob and exit (default: %default)",
 )
 if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]

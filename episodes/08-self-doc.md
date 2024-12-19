@@ -34,7 +34,7 @@ $ scons --help
 
 ```output
 Local Options:
-  --variables                 Print the text files returned by Glob (default $(default))
+  --variables  Print the text files returned by Glob and exit (default: False)
 
 Default Targets:
   results.txt
@@ -94,7 +94,7 @@ we get:
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 Local Options:
-  --variables  Print the text files returned by Glob (default $(default))
+  --variables  Print the text files returned by Glob and exit (default: False)
 
 Default Targets:
     results.txt
