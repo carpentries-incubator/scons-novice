@@ -4,12 +4,12 @@ title: Discussion
 
 ## Parallel Execution
 
-Make can build dependencies in *parallel* sub-processes, via its `--jobs`
+SCons can build dependencies in *parallel* sub-processes, via its `--jobs`
 flag (or its `-j` abbreviation) which specifies the number of sub-processes to
 use e.g.
 
 ```bash
-$ make --jobs 4 results.txt
+$ scons --jobs=4 results.txt
 ```
 
 If we have independent dependencies then these can be built at the
@@ -19,95 +19,68 @@ independent and can both be built at the same time. Likewise for
 branches in your analysis, this can greatly speed up your build
 process.
 
-For more information see the GNU Make manual chapter on [Parallel
-Execution][gnu-make-parallel].
+For more information see the SCons User Guide chapter on [Command-Line
+Options](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-options).
 
-## Different Types of Assignment
+## SCons and Version Control
 
-Some Makefiles may contain `:=` instead of `=`. Your Makefile may
-behave differently depending upon which you use and how you use it:
-
-- A variable defined using `=` is a *recursively expanded
-  variable*. Its value is calculated only when its value is
-  requested. If the value assigned to the variable itself contains
-  variables (e.g. `A = $(B)`) then these variables' values are only
-  calculated when the variable's value is requested (e.g. the value of
-  `B` is only calculated when the value of `A` is requested via
-  `$(A)`. This can be termed *lazy setting*.
-
-- A variable defined using `:=` is a *simply expanded variable*. Its
-  value is calculated when it is declared. If the value assigned to
-  the variable contains variables (e.g. `A = $(B)`) then these
-  variables' values are also calculated when the variable is declared
-  (e.g. the value of `B` is calculated when `A` is assigned
-  above). This can be termed *immediate setting*.
-
-For a detailed explanation, see:
-
-- StackOverflow [Makefile variable assignment][makefile-variable]
-- GNU Make [The Two Flavors of Variables][gnu-make-variables]
-
-## Make and Version Control
-
-Imagine that we manage our Makefiles using a version control
-system such as Git.
+Imagine that we manage our SCons configuration files using a version control system such as Git.
 
 Let's say we'd like to run the workflow developed in this lesson
 for three different word counting scripts, in order to compare their
 speed (e.g. `wordcount.py`, `wordcount2.py`, `wordcount3.py`).
 
-To do this we could edit `config.mk` each time by replacing
-`COUNT_SRC=wordcount.py` with `COUNT_SRC=wordcount2.py` or
-`COUNT_SRC=wordcount3.py`,
+To do this we could edit `SConstruct` each time by replacing
+`count_source="wordcount.py"` with `count_source="wordcount2.py"` or
+`count_source="wordcount3.py"`,
 but this would be detected as a change by the version control system.
 This is a minor configuration change, rather than a change to the
 workflow, and so we probably would rather avoid committing this change
 to our repository each time we decide to test a different counting script.
 
-An alternative is to leave `config.mk` untouched, by overwriting the value
-of `COUNT_SRC` at the command line instead:
+An alternative is to leave `SConstruct` untouched, by overwriting the value
+of `count_source` at the command line instead:
 
 ```
-$ make variables COUNT_SRC=wordcount2.py
+$ scons count_source=wordcount2.py
 ```
 
-The configuration file then simply contains the default values for the
-workflow, and by overwriting the defaults at the command line you can
-maintain a neater and more meaningful version control history.
+The configuration file then simply contains the default values for the workflow, and by overwriting
+the defaults at the command line you can maintain a neater and more meaningful version control
+history. Command line control of `SConstruct` files is documented in the SCons User Guide chapter on
+[Command-Line
+Options](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-options) and
+[Command-Line Build
+Variables](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-variables)
+[Command-Line
 
-## Make Variables and Shell Variables
+## SCons Variables and Shell Variables
 
-Makefiles embed shell scripts within them, as the actions that are
-executed to update an object. More complex actions could well include
-shell variables.  There are several ways in which make variables and
-shell variables can be confused and can be in conflict.
+`SConstruct` define shell commands, as the actions that are executed to update an object. More
+complex actions could well include shell variables. There are several ways in which SCons special
+substitution variables and shell variables can be confused and can be in conflict.
 
-- Make actually accepts three different syntaxes for variables: `$N`,
-  `$(NAME)`, or `${NAME}`.
-  
-  The single character variable names are most commonly used for
-  automatic variables, and there are many of them.  But if you happen
-  upon a character that isn't pre-defined as an automatic variable,
-  make will treat it as a user variable.
-  
+- SCons actually accepts two different syntaxes for action string substition variables: `$NAME` or or
+  `${NAME}`.
+
   The `${NAME}` syntax is also used by the unix shell in cases where
   there might be ambiguity in interpreting variable names, or for
   certain pattern substitution operations.  Since there are only
   certain situations in which the unix shell requires this syntax,
   instead of the more common `$NAME`, it is not familiar to many users.
 
-- Make does variable substitution on actions before they are passed to
-  the shell for execution.  That means that anything that looks like a
-  variable to make will get replaced with the appropriate value.  (In
-  make, an uninitialized variable has a null value.)  To protect a
+- SCons does variable substitution on actions before they are passed to
+  the shell for execution. That means that anything that looks like a
+  substitution variable to SCons will get replaced with the appropriate value. (In
+  SCons, an uninitialized variable has an empty string value, `""`.) To protect a
   variable you intend to be interpreted by the shell rather than make,
-  you need to "quote" the dollar sign by doubling it (`$$`). (This the
+  you need to "escape" the dollar sign by doubling it (`$$`). (This the
   same principle as escaping special characters in the unix shell
-  using the backslash (`\`) character.)  In
-  short: make variables have a single dollar sign, shell variables
-  have a double dollar sign.  This applies to anything that looks like
+  using the backslash (`\`) character.) In
+  short: SCons variables have a single dollar sign, shell variables
+  have a double dollar sign. This applies to anything that looks like
   a variable and needs to be interpreted by the shell rather than
-  make, including awk positional parameters (e.g., `awk '{print $$1}'`
+  SCons, including awk positional parameters (e.g., `awk '{print $$1}'`
   instead of `awk '{print $1}'`) or accessing environment variables
   (e.g., `$$HOME`).
 
@@ -115,15 +88,18 @@ shell variables can be confused and can be in conflict.
 
 ## Detailed Example of Shell Variable Quoting
 
-Say we had the following `Makefile` (and the .dat files had already
+Say we had the following `SConstruct` file (and the .dat files had already
 been created):
 
-```make
-BOOKS = abyss isles
-
-.PHONY: plots
-plots:
-	for book in $(BOOKS); do python plotcount.py $book.dat $book.png; done
+```python
+books = "abyss isles"
+plots = Command(
+    target=[f"{book}.png" for book in books.split(" ")],
+    source=[f"{book}.dat" for book in books.split(" ")],
+    action=[for book in ${books}; do python plotcount.py $book.dat $book.png; done"],
+    books=books,
+)
+Alias("plots", plots)
 ```
 
 the action that would be passed to the shell to execute would be:
@@ -132,21 +108,24 @@ the action that would be passed to the shell to execute would be:
 for book in abyss isles; do python plotcount.py ook.dat ook.png; done
 ```
 
-Notice that make substituted `$(BOOKS)`, as expected, but it also
+Notice that SCons substituted `${books}`, as expected, but it also
 substituted `$book`, even though we intended it to be a shell variable.
-Moreover, because we didn't use `$(NAME)` (or `${NAME}`) syntax, make
+Moreover, because we didn't use `${NAME}` syntax, SCons
 interpreted it as the single character variable `$b` (which we haven't
-defined, so it has a null value) followed by the text "ook".
+defined, so it has a empty string value) followed by the text "ook".
 
 In order to get the desired behavior, we have to write `$$book` instead
 of `$book`:
 
-```make
-BOOKS = abyss isles
-
-.PHONY: plots
-plots:
-	for book in $(BOOKS); do python plotcount.py $$book.dat $$book.png; done
+```python
+books = "abyss isles"
+plots = Command(
+    target=[f"{book}.png" for book in books.split(" ")],
+    source=[f"{book}.dat" for book in books.split(" ")],
+    action=[for book in ${books}; do python plotcount.py $$book.dat $$book.png; done"],
+    books=books,
+)
+Alias("plots", plots)
 ```
 
 which produces the correct shell command:
