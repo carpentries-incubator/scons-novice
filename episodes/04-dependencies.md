@@ -173,7 +173,7 @@ scons: done building targets.
 The following figure shows a graph of the dependencies, that are
 involved in building the target `results.txt`. Notice the recently
 added dependencies `countwords.py` and `testzipf.py`.  This is how the
-Makefile should look after completing the rest of the exercises
+SConstruct should look after completing the rest of the exercises
 in this episode.
 
 ![](fig/04-dependencies.png "results.txt dependencies after adding countwords.py and testzipf.py as dependencies"){alt='results.txt dependencies after adding countwords.py and testzipf.py as dependencies'}

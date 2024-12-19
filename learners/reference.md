@@ -325,6 +325,12 @@ manager](#build-manager) is run.
 [dependency]{#dependency}
 :   A synonym for [source](#source).
 
+[false dependency]{#false-dependency}
+:   This can refer to a [dependency](#dependency) that is artificial.
+e.g. a false dependency is introduced if a data analysis script
+is added as a dependency to the data files that the script
+analyses.
+
 [function]{#function}
 :   A [Python](#glossary-python), [SCons](#scons), or user-defined function that performs some operation, for
 example gets a list of files matching a pattern.
