@@ -61,6 +61,10 @@ Let us go through each section in turn:
   environment.
 - `#` denotes a *comment*. Any text from `#` to the end of the line is
   ignored by SCons but could be very helpful for anyone reading your SConstruct file.
+- `env.Command` is the generic task definition class used by SCons. Note that the task is defined
+  inside a construction environment we created earlier. If there were more than one construction
+  environment available, additional tasks could use unique, task specific, construction
+  environments.
 - `isles.dat` is a [target](../learners/reference.md#target), a file to be
   created, or built.
 - `books/isles.txt` is a [source](../learners/reference.md#source), also called a
