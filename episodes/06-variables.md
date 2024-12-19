@@ -38,6 +38,9 @@ We can do the same thing with the interpreter language used to run the script:
 LANGUAGE = "python"
 ```
 
+We place variables intended for use as configuration constants at the top of an SConstruct file so
+they are easy to find and modify.
+
 Similar to the SCons special substitution variables, we can define any number of per-task or
 per-builder substitution variables with keyword arguments. The same `${...}` substitution syntax
 tells SCons to replace a task action string variable with its value when SCons is run.
@@ -72,7 +75,7 @@ using `ZIPF_SOURCE` as the variable name.
 
 ## Solution
 
-[This Makefile](files/code/06-variables-challenge/Makefile)
+[This Makefile](files/code/06-variables/Makefile)
 contains a solution to this challenge.
 
 
@@ -81,57 +84,10 @@ contains a solution to this challenge.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-We place variables intended for use as configuration constants at the top of an SConstruct file so
-they are easy to find and modify. Alternatively, we can pull them out into a new
-file that just holds variable definitions (i.e. delete them from
-the original SConstruct file). Let us create `config.scons` file:
-
-```python
-# Count words script.
-LANGUAGE=python
-COUNT_SRC=countwords.py
-
-# Test Zipf's rule
-ZIPF_SRC=testzipf.py
-```
-
-We can then import `config.mk` into `Makefile` using:
-
-```make
-include config.mk
-```
-
-We can re-run Make to see that everything still works:
-
-```bash
-$ make clean
-$ make dats
-$ make results.txt
-```
-
-We have separated the configuration of our Makefile from its rules --
-the parts that do all the work. If we want to change our script name
-or how it is executed we just need to edit our configuration file, not
-our source code in `Makefile`. Decoupling code from configuration in
-this way is good programming practice, as it promotes more modular,
-flexible and reusable code.
-
-:::::::::::::::::::::::::::::::::::::::::  callout
-
-## Where We Are
-
-[This Makefile](files/code/06-variables/Makefile)
-and [its accompanying `config.mk`](files/code/06-variables/config.mk)
-contain all of our work so far.
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Define variables by assigning values to names.
-- Reference variables using `$(...)`.
+- Define variables by assigning values to names with Python syntax
+- Reference variables using SCons substitution syntax `${...}`.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
