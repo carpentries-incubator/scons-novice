@@ -357,8 +357,9 @@ designed for a Software Carpentry Build competition in August 2000: [SCons][scon
 manager](#build-manager).
 
 [SConscript]{#sconscript}
-:   The conventional name for secondary [configuration file](#configuration-file)s for the
-[SCons](#scons) [build manager](#build-manager).
+:   The conventional name for secondary [configuration files](#configuration-file) for the
+[SCons](#scons) [build manager](#build-manager). Also the generic name for the full set of SCons
+configuration files.
 
 [source]{#source}
 :   A file that a [target](#target) depends on. If any of a target's [sources](#source) are newer
