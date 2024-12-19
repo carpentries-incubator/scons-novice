@@ -2,8 +2,6 @@
 title: 'References'
 ---
 
-## Glossary
-
 ## Running SCons
 
 To run SCons:
