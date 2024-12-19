@@ -1,5 +1,5 @@
 ---
-title: Self-Documenting SConscript files
+title: Self-Documenting SConstruct files
 teaching: 10
 exercises: 0
 ---
