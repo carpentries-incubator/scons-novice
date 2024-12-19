@@ -63,7 +63,7 @@ episodes:
 - 02-sconscript-files.md
 - 03-variables.md
 - 04-dependencies.md
-- 05-patterns.md
+- 05-builders.md
 - 06-variables.md
 - 07-functions.md
 - 08-self-doc.md
