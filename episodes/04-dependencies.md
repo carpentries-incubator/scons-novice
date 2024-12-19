@@ -240,8 +240,8 @@ may require hours to days to complete.
 What will happen if you now execute:
 
 ```bash
-$ touch books/last.txt
-$ make results.txt
+$ echo "" >> books/last.txt
+$ scons results.txt
 ```
 
 1. only `last.dat` is recreated
@@ -253,10 +253,10 @@ $ make results.txt
 
 ## Solution
 
-`3.` only `last.dat` and `results.txt` are recreated.
+`1.` only `last.dat` is recreated.
 
-Follow the dependency tree to understand the answer(s).
-
+Follow the dependency tree and consider the effect of an empty line on the word count calculations
+to understand the answer(s).
 
 
 :::::::::::::::::::::::::
@@ -275,12 +275,15 @@ What would happen if you added `testzipf.py` as dependency of `results.txt`, and
 
 If you change the rule for the `results.txt` file like this:
 
-```make
-results.txt : isles.dat abyss.dat last.dat testzipf.py
-        python testzipf.py $^ > $@
+```python
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat", "testzipf.py"],
+    action=["python testzipf.py ${SOURCES} > ${TARGET}"],
+)
 ```
 
-`testzipf.py` becomes a part of `$^`, thus the command becomes
+`testzipf.py` becomes a part of `${SOURCES}`, thus the command becomes
 
 ```bash
 python testzipf.py abyss.dat isles.dat last.dat testzipf.py > results.txt
@@ -290,20 +293,26 @@ This results in an error from `testzipf.py` as it tries to parse the
 script as if it were a `.dat` file. Try this by running:
 
 ```bash
-$ make results.txt
+$ scons results.txt
 ```
 
 You'll get
 
 ```error
-python testzipf.py abyss.dat isles.dat last.dat testzipf.py > results.txt
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+python testzipf.py isles.dat abyss.dat last.dat testzipf.py > results.txt
 Traceback (most recent call last):
-  File "testzipf.py", line 19, in <module>
+  File "/projects/kbrindley/repos/scons-novice/scons-lesson/testzipf.py", line 19, in <module>
     counts = load_word_counts(input_file)
-  File "path/to/testzipf.py", line 39, in load_word_counts
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/projects/kbrindley/repos/scons-novice/scons-lesson/countwords.py", line 39, in load_word_counts
     counts.append((fields[0], int(fields[1]), float(fields[2])))
-IndexError: list index out of range
-make: *** [results.txt] Error 1
+                              ^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'countwords'
+scons: *** [results.txt] Error 1
+scons: building terminated because of errors.
 ```
 
 :::::::::::::::::::::::::
@@ -313,21 +322,37 @@ make: *** [results.txt] Error 1
 We still have to add the `testzipf.py` script as dependency to
 `results.txt`.
 Given the answer to the challenge above,
-we need to make a couple of small changes so that we can still use automatic variables.
+we need to make a couple of small changes so that we can still use special substitution variables.
 
-We'll move `testzipf.py` to be the first dependency and then edit the action
-so that we pass all the dependencies as arguments to python using `$^`.
+We'll move `testzipf.py` to be the first source. We could then edit the action
+so that we pass all the dependencies as arguments to python using `${SOURCES}`.
 
 ```make
-results.txt : testzipf.py isles.dat abyss.dat last.dat
-	python $^ > $@
+env.Command(
+    target=["results.txt"],
+    source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
+    action=["python ${SOURCES} > ${TARGET}"],
+)
 ```
+
+But it would be helpful to clarify the unique role of the `testzipf.py` as a Python script. We can
+clarify the intended roles for different source files by indexing the sources in our action. SCons
+allows for Python-ic slicing when indexing special substitution variables.
+
+```make
+env.Command(
+    target=["results.txt"],
+    source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
+    action=["python ${SOURCES[0]} ${SOURCES[1:]} > ${TARGET}"],
+)
+```
+
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Where We Are
 
-[This Makefile](files/code/04-dependencies/Makefile)
+[This SConstruct file](files/code/04-dependencies/SConstruct)
 contains everything done so far in this topic.
 
 
