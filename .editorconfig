@@ -19,6 +19,16 @@ indent_size = 4
 indent_style = space
 max_line_length = 79
 
+[SConstruct]
+indent_size = 4
+indent_style = space
+max_line_length = 79
+
+[SConscript]
+indent_size = 4
+indent_style = space
+max_line_length = 79
+
 [*.sh]
 end_of_line = lf
 
