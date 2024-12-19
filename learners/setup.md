@@ -45,7 +45,7 @@ $ conda activate scons-lesson
 
 ### Python
 
-Python2 or Python3, Numpy and Matplotlib are required.
+Python3, Numpy, and Matplotlib are required.
 They can be installed separately, but the easiest approach is to install
 [Anaconda](https://www.anaconda.com/distribution/) which includes all of the
 necessary python software.
