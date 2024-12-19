@@ -4,7 +4,7 @@ title: Discussion
 
 ## Parallel Execution
 
-SCons can build dependencies in *parallel* sub-processes, via its `--jobs`
+[SCons](https://scons.org/) can build dependencies in *parallel* sub-processes, via its `--jobs`
 flag (or its `-j` abbreviation) which specifies the number of sub-processes to
 use e.g.
 
@@ -136,7 +136,12 @@ for book in abyss isles; do python plotcount.py $book.dat $book.png; done
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Make and Reproducible Research
+## Build Managers and Reproducible Research
+
+[Make](https://www.gnu.org/software/make/) is an older build manager than
+[SCons](https://scons.org/). The original version of Make was released in 1977. Many build managers
+are designed around the concepts originally introduced by Make. As the original build manager, it is
+common to see Make appear in discussion about build managers.
 
 Blog articles, papers, and tutorials on automating commonly
 occurring research activities using Make:
@@ -182,7 +187,7 @@ occurring research activities using Make:
 [episode 2](../episodes/02-makefiles.md).
 
 A more detailed discussion can be read on
-[issue 98](https://github.com/swcarpentry/scons-novice/issues/98#issuecomment-307361751).
+[issue 98](https://github.com/swcarpentry/make-novice/issues/98#issuecomment-307361751).
 
 [gnu-make-parallel]: https://www.gnu.org/software/make/manual/html_node/Parallel.html
 [makefile-variable]: https://stackoverflow.com/questions/448910/makefile-variable-assignment
@@ -196,6 +201,3 @@ A more detailed discussion can be read on
 [driving-experiments]: https://lifesum.github.io/posts/2016/01/14/make-experiments/
 [make-neuroscience]: https://journal.frontiersin.org/article/10.3389/fninf.2016.00002/full
 [whats-a-build-tool]: https://www.lihaoyi.com/post/WhatsinaBuildTool.html
-
-
-

@@ -4,7 +4,7 @@ title: 'References'
 
 ## Running SCons
 
-To run SCons:
+To run [SCons](https://scons.org/):
 
 ```bash
 $ scons
