@@ -218,8 +218,9 @@ count_executable=f"python {count_source}"
 
 Suppress printing of actions:
 
-SCons provides several mechanisms to control output. The `-Q` flag suppresses printing of all
-progress messages. Task actions may suppress printing commands with a preceding `@` symbol.
+SCons provides several mechanisms to control output. The `-Q` flag suppresses printing of progress
+messages. The `--silent` flag suppresses printing of the command actions. Individual task actions
+may suppress printing commands with a preceding `@` symbol.
 
 ```python
 target_nodes = Command(
