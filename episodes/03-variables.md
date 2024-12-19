@@ -120,10 +120,10 @@ env.Command(
 of the current task'. Again, when SCons is run it will replace this
 variable with the sources.
 
-Let's update our text files and re-run our task:
+Let's clean our workflow and re-run our task:
 
 ```bash
-$ echo "" | tee -a books/*.txt
+$ scons . --clean
 $ scons results.txt
 ```
 
@@ -181,11 +181,18 @@ $ scons results.txt
 ```
 
 you will find that the `results.txt` file is recreated because the content signature of the `.dat`
-files has changed. If you run this command, be sure to clean the `.dat` files to remove the manually
-edited lines.
+files has changed. However, the `.dat` files are not recreated. Despite our edit, the source and
+action signatures of the `.dat` tasks have not changed. It is important that you never edit targets
+manually to avoid out-of-sync and reproducibility errors arising in the middle of your workflow.
+You can rely on SCons to know when to rebuild targets if you have well defined tasks with complete
+target and sources lists
+
+If you run this command or manually edited the `.dat` files, be sure to clean and rebuild them to
+remove the manually edited lines.
 
 ```bash
 scons dats --clean
+scons results.txt
 ```
 
 
