@@ -88,7 +88,7 @@ If we now run
 $ scons --help
 ```
 
-we get:
+we get some SCons status messages, our help message, and the hint for the full SCons help message:
 
 ```output
 scons: Reading SConscript files ...
@@ -105,30 +105,23 @@ Target Aliases:
 Use scons -H for help about SCons built-in command-line options.
 ```
 
-If we add, change or remove a target or rule, we now only need to
-remember to add, update or remove a comment next to the rule. So long
-as we respect our convention of using `##` for such comments, then our
-`help` rule will take care of detecting these comments and printing
-them for us.
+If we add, change or remove a default target or alias, we will automatically see updated lists in
+our help messages.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Where We Are
 
-[This Makefile](files/code/08-self-doc/Makefile)
-and [its accompanying `config.mk`](files/code/08-self-doc/config.mk)
-contain all of our work so far.
+[This Makefile](files/code/08-self-doc/SConstruct)
+contains all of our work so far.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
-[sed-docs]: https://www.gnu.org/software/sed/
-
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Document Makefiles by adding specially-formatted comments and a target to extract and format them.
+- Document SConstruct options, targets, and aliases with the SCons `default_ans` and
+  `DEFAULT_TARGETS` variables and the `Help` function.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
