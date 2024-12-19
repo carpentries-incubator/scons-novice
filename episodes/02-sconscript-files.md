@@ -24,6 +24,11 @@ exercises: 10
 Create a file, called `SConstruct`, with the following content:
 
 ```python
+import os
+
+
+env = Environment(os.environ.copy())
+
 # Count words.
 Command(
     target=["isles.dat"],
@@ -43,8 +48,17 @@ the `SConstruct` file naming convention.
 The syntax should be familiar to [Python](https://www.python.org/) users because SCons uses Python
 as the configuration language. Note how the action resembles a line from our shell script.
 
-Let us go through each line in turn:
+Let us go through each section in turn:
 
+- First we import the `os` module and create an SCons with a copy of the active shell environment
+  [construction
+  environment](https://scons.org/doc/production/HTML/scons-user.html#sect-construction-environments).
+  Most build managers inherit the active shell environment by default. SCons requires a little more
+  effort, but this separation of construction environment from the external environment is valuable in
+  complex computational science and engineering workflows which may require several, mutually
+  exclusive environments for each task in a single workflow or project. For the purposes of this
+  lesson, we will use a single construction environment inherited from the shell's active Conda
+  environment.
 - `#` denotes a *comment*. Any text from `#` to the end of the line is
   ignored by SCons but could be very helpful for anyone reading your SConstruct file.
 - `isles.dat` is a [target](../learners/reference.md#target), a file to be
@@ -97,7 +111,7 @@ The status messages can be silenced with the `-Q` option.
 Let's see if we got what we expected.
 
 ```bash
-head -5 isles.dat
+$ head -5 isles.dat
 ```
 
 The first 5 lines of `isles.dat` should look exactly like before.
@@ -189,7 +203,7 @@ computed as an `md5sum`. If we run the `md5sum` ourselves, we can see the signat
 and after the file edit.
 
 ```bash
-md5sum books/isles.dat
+$ md5sum books/isles.dat
 ```
 
 ```output
@@ -197,13 +211,13 @@ md5sum books/isles.dat
 ```
 
 ```bash
-echo "" >> books/isles.txt
+$ echo "" >> books/isles.txt
 ```
 
 We can see that appending a blank newline changes the computed content signature.
 
 ```bash
-md5sum books/isles.dat
+$ md5sum books/isles.dat
 ```
 
 ```output
@@ -244,69 +258,95 @@ of documentation, reducing the number of things we have to remember.
 
 Let's add another task to the end of `SConstruct`:
 
-```make
-abyss.dat : books/abyss.txt
-	python countwords.py books/abyss.txt abyss.dat
+```python
+Command(
+    target=["abyss.dat"],
+    source=["books/absyss.txt"],
+	  action=["python countwords.py books/abyss.txt abyss.dat"],
+)
 ```
 
-If we run Make,
+If we run SCons,
 
 ```bash
-$ make
+$ scons
 ```
 
 then we get:
 
 ```output
-make: `isles.dat' is up to date.
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+python countwords.py books/abyss.txt abyss.dat
+scons: done building targets.
 ```
 
-Nothing happens because Make attempts to build the first target it
-finds in the Makefile, the
-[default target](../learners/reference.md#default-target), which is
-`isles.dat` which is already up-to-date. We need to explicitly tell Make we want
-to build `abyss.dat`:
+The first target is reported as up to date and SCons builds the second target. The default behavior
+of SCons is to build all default targets, and unless otherwise specified, all targets are added to
+the default targets list.
+
+If we do not want to build all targets, we can also build a specific target by name. First, confirm
+that running SCons again reports both targets up to date.
 
 ```bash
-$ make abyss.dat
+$ scons
 ```
 
-Now, we get:
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+scons: `abyss.dat' is up to date.
+scons: done building targets.
+```
+
+Then confirm that when specifying a target, SCons only reports on the requested target.
+
+```bash
+$ scons abyss.dat
+```
 
 ```output
-python countwords.py books/abyss.txt abyss.dat
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `abyss.dat' is up to date.
+scons: done building targets.
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## "Up to Date" Versus "Nothing to be Done"
 
-If we ask Make to build a file that already exists and is up to
-date, then Make informs us that:
+If we ask SCons to build a file that already exists and is up to
+date, then SCons informs us that:
 
 ```output
-make: `isles.dat' is up to date.
+scons: `isles.dat' is up to date.
 ```
 
 If we ask Make to build a file that exists but for which there is
 no rule in our Makefile, then we get message like:
 
 ```bash
-$ make countwords.py
+$ scons countwords.py
 ```
 
 ```output
-make: Nothing to be done for `countwords.py'.
+scons: Nothing to be done for `countwords.py'.
 ```
 
-`up to date` means that the Makefile has a rule with one or more actions
+`up to date` means that the `SConstruct` file has a task with one or more actions
 whose target is the name of a file (or directory) and the file is up to date.
 
 `Nothing to be done` means that
 the file exists but either :
 
-- the Makefile has no rule for it, or
-- the Makefile has a rule for it, but that rule has no actions
+- the `SConstruct` file has no task for it, or
+- the `SConstruct` file has a task for it, but that task has no actions
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
