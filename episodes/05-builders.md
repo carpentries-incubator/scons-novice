@@ -119,60 +119,44 @@ env.CountWords("abyss.dat")
 env.CountWords("last.dat")
 ```
 
-This solution is similar to Make 'pattern rules', but it is both more verbose and more flexible.
-Pseudo-builders require a full Python function definition syntax, but they can do more than simple
-extension pattern matching and anything the user requires.
+For students familiar with GNU Make, pseudo-builders are similar to Make 'pattern rules', but
+pseudo-builders are both more verbose and more flexible. Pseudo-builders require a full Python
+function definition syntax, but they can do more than simple file extension pattern matching and
+anything the user requires.
 
 A psuedo-builder alone will not allow us to match arbitrary files using the `.dat` file extension.
-If we desire the full 'pattern rule' behavior, we can accept a target name and match it to our
+If we desire the full Make 'pattern rule' behavior, we can accept a target name and match it to our
 pseudo-builder with the SCons
-[`COMMAND_LINE_TARGETS`](https://scons.org/doc/production/HTML/scons-user.html#sect-var-COMMAND-LINE-TARGETS) variable.
+[`COMMAND_LINE_TARGETS`](https://scons.org/doc/production/HTML/scons-user.html#sect-var-COMMAND-LINE-TARGETS)
+variable.
 
 Add the following to the bottom of your SConstruct file
 
-```
+```python
 for target in COMMAND_LINE_TARGETS:
     if pathlib.Path(target).suffix == ".dat":
         env.CountWords(target)
 ```
 
-:::::::::::::::::::::::::::::::::::::::::  callout
+Now we can define tasks for new files not found in our pre-defined tasks as
 
-## Using Make Wildcards
+```bash
+$ scons sierra.dat
+```
 
-The Make `%` wildcard can only be used in a target and in its
-dependencies. It cannot be used in actions. In actions, you may
-however use `$*`, which will be replaced by the stem with which
-the rule matched.
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
-Our Makefile is now much shorter and cleaner:
-
-```make
-# Generate summary table.
-results.txt : testzipf.py isles.dat abyss.dat last.dat
-	python $^ > $@
-
-# Count words.
-.PHONY : dats
-dats : isles.dat abyss.dat last.dat
-
-%.dat : countwords.py books/%.txt
-	python $^ $@
-
-.PHONY : clean
-clean :
-	rm -f *.dat
-	rm -f results.txt
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+python countwords.py books/sierra.txt sierra.dat
+scons: done building targets.
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Where We Are
 
-[This Makefile](files/code/05-patterns/Makefile)
+[This Makefile](files/code/05-builders-patterns/SConstruct)
 contains all of our work so far.
 
 
@@ -180,9 +164,12 @@ contains all of our work so far.
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use the wildcard `%` as a placeholder in targets and dependencies.
-- Use the special variable `$*` to refer to matching sets of files in actions.
+- Use the `Builder` function and `Append` the construction environment `BUILDERS` dictionary to
+  define common actions.
+- Use the `AddMethod` function and Python functions to define pseudo-builders with custom tailored
+  task handling.
+- Use the special SCons variable `COMMAND_LINE_TARGETS` to perform dynamic handling that
+  depends on command line target requests.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
