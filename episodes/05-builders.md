@@ -156,7 +156,7 @@ scons: done building targets.
 
 ## Where We Are
 
-[This Makefile](files/code/05-builders-patterns/SConstruct)
+[This SConstruct file](files/code/05-builders-patterns/SConstruct)
 contains all of our work so far.
 
 

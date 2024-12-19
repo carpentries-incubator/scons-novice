@@ -12,7 +12,7 @@ exercises: 5
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How *else* can I eliminate redundancy in my Makefiles?
+- How *else* can I eliminate redundancy in my SConscript files?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -349,7 +349,7 @@ now we have introduced our function:
 
 ## Where We Are
 
-[This Makefile](files/code/07-functions/SConstruct)
+[This SConstruct file](files/code/07-functions/SConstruct)
 contains all of our work so far.
 
 

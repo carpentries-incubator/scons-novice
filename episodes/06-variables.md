@@ -6,18 +6,18 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Use variables in a Makefile.
+- Use variables in SConscript files.
 - Explain the benefits of decoupling configuration from computation.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I eliminate redundancy in my Makefiles?
+- How can I eliminate redundancy in my SConscript files?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Despite our efforts, our Makefile still has repeated content, i.e.  the program we use to run our
+Despite our efforts, our SConstruct still has repeated content, i.e.  the program we use to run our
 scripts, `python`. Additionally, if we renamed our scripts we'd have to hunt through our SConstruct
 file in multiple places.
 
@@ -75,7 +75,7 @@ using `ZIPF_SOURCE` as the variable name.
 
 ## Solution
 
-[This Makefile](files/code/06-variables/Makefile)
+[This SConstruct file](files/code/06-variables/SConstruct)
 contains a solution to this challenge.
 
 
@@ -88,7 +88,7 @@ contains a solution to this challenge.
 
 ## Where We Are
 
-[This Makefile](files/code/06-variables/SConstruct)
+[This SConstruct file](files/code/06-variables/SConstruct)
 contains all of our work so far.
 
 

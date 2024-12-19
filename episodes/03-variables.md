@@ -6,7 +6,7 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Use SCons special substitution variables to remove duplication in a Makefile.
+- Use SCons special substitution variables to remove duplication in SConscript files.
 - Explain why shell wildcards in dependencies can cause problems.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -77,7 +77,7 @@ principle or D.R.Y.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Let us set about removing some of the repetition from our Makefile.
+Let us set about removing some of the repetition from our SConstruct file.
 
 In our `results.txt` task we duplicate the data file names and the
 name of the results file name:

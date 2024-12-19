@@ -112,7 +112,7 @@ our help messages.
 
 ## Where We Are
 
-[This Makefile](files/code/08-self-doc/SConstruct)
+[This SConstruct file](files/code/08-self-doc/SConstruct)
 contains all of our work so far.
 
 

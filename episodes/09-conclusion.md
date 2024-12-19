@@ -45,7 +45,7 @@ Add new rules, update existing rules, and add new variables to:
 
 ## Solution
 
-[This SConstruct](files/code/09-conclusion-challenge-1/SConstruct)
+[This SConstruct file](files/code/09-conclusion-challenge-1/SConstruct)
 contains a simple solution to this challenge.
 
 A more elegant solution would be to re-write the `count_words` pseudo-builder as a generic, two-file
@@ -92,7 +92,7 @@ rules and add new variables to:
 
 ## Solution
 
-[This Makefile](files/code/09-conclusion-challenge-2/SConstruct)
+[This SConstruct file](files/code/09-conclusion-challenge-2/SConstruct)
 contains a solution to this challenge.
 
 
@@ -102,7 +102,7 @@ contains a solution to this challenge.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Archiving the Makefile
+## Archiving the SConstruct file
 
 Why does the SCons task for the archive directory add the SConstruct to our archive of code,
 data, plots and Zipf summary table?
