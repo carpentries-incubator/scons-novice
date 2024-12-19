@@ -181,14 +181,6 @@ occurring research activities using Make:
   weaknesses for common build-related use cases in software
   development.
 
-## Return messages and `.PHONY` target behaviour
-
-`Up to date` vs `Nothing to be done` is discussed in
-[episode 2](../episodes/02-makefiles.md).
-
-A more detailed discussion can be read on
-[issue 98](https://github.com/swcarpentry/make-novice/issues/98#issuecomment-307361751).
-
 [gnu-make-parallel]: https://www.gnu.org/software/make/manual/html_node/Parallel.html
 [makefile-variable]: https://stackoverflow.com/questions/448910/makefile-variable-assignment
 [gnu-make-variables]: https://www.gnu.org/software/make/manual/html_node/Flavors.html#Flavors
