@@ -306,6 +306,9 @@ update a file or other object.
 [assignment]{#assignment}
 :   A request that [Python](#glossary-python) stores something in a [variable](#variable).
 
+[builder]{#build-file}
+:   An re-useable SCons task definition with a predefined action.
+
 [build file]{#build-file}
 :   A synonym for [configuration file](#configuration-file)
 

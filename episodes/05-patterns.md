@@ -1,26 +1,29 @@
 ---
-title: Pattern Rules
+title: Builders
 teaching: 10
 exercises: 0
 ---
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Write Make pattern rules.
+- Write SCons builders.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I define rules to operate on similar files?
+- How can I define common task operations for similar files?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Our Makefile still has repeated content. The rules for each `.dat`
+Our SConstruct file still has repeated content. The task for each `.dat`
 file are identical apart from the text and data file names. We can
-replace these rules with a single [pattern
-rule](../learners/reference.md#pattern-rule) which can be used to build any
-`.dat` file from a `.txt` file in `books/`:
+replace these tasks with a single [builder](../learners/reference.md#builder) which can be used to
+build any `.dat` file from a `.txt` file in `books/`:
+
+```python
+builder = env.Builder(action=[""])
+```
 
 ```make
 %.dat : countwords.py books/%.txt
