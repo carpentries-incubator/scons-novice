@@ -1,0 +1,35 @@
+import os
+import pathlib
+
+
+env = Environment(ENV=os.environ.copy())
+
+count_words_builder = env.Builder(
+    action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
+)
+env.Append(BUILDERS={"CountWords": count_words_builder})
+
+env.CountWords(
+    target=["isles.dat"],
+    source=["books/isles.txt", "countwords.py"],
+)
+
+env.CountWords(
+    target=["abyss.dat"],
+    source=["books/abyss.txt", "countwords.py"],
+)
+
+env.CountWords(
+    target=["last.dat"],
+    source=["books/last.txt", "countwords.py"],
+)
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
+    action=["python ${SOURCES[0]} ${SOURCES[1:]} > ${TARGET}"],
+)
+
+env.Default(["results.txt"])

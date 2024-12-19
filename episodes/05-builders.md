@@ -22,48 +22,118 @@ replace these tasks with a single [builder](../learners/reference.md#builder) wh
 build any `.dat` file from a `.txt` file in `books/`:
 
 ```python
-builder = env.Builder(action=[""])
+count_words_builder = env.Builder(
+    action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
+)
 ```
 
-```make
-%.dat : countwords.py books/%.txt
-	python $^ $@
+After creating the custom builder, we need to add it to the construction environment to make it
+available for task definitions.
+
+```python
+env.Append(BUILDERS={"CountWords": count_words_builder})
 ```
 
-`%` is a Make [wildcard](../learners/reference.md#wildcard),
-matching any number of any characters.
+Now we can convert our `.dat` tasks from the `Command` to `CountWords` builder.
 
-This rule can be interpreted as:
-"In order to build a file named `[something].dat` (the target)
-find a file named `books/[that same something].txt` (one of the dependencies)
-and run `python [the dependencies] [the target]`."
+```python
+env.CountWords(
+    target=["isles.dat"],
+    source=["books/isles.txt", "countwords.py"],
+)
 
-If we re-run Make,
+env.CountWords(
+    target=["abyss.dat"],
+    source=["books/abyss.txt", "countwords.py"],
+)
+
+env.CountWords(
+    target=["last.dat"],
+    source=["books/last.txt", "countwords.py"],
+)
+```
+
+Custom builders like `CountWords` allow us to apply the same action to many tasks.
+
+If we re-run SCons,
 
 ```bash
-$ make clean
-$ make dats
+$ scons dats --clean
+$ scons dats
 ```
 
 then we get:
 
 ```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
 python countwords.py books/isles.txt isles.dat
 python countwords.py books/abyss.txt abyss.dat
 python countwords.py books/last.txt last.dat
+scons: done building targets.
 ```
 
-Note that we can still use Make to build individual `.dat` targets as before,
-and that our new rule will work no matter what stem is being matched.
+We can further simplify the task definition by moving the text file handling with a Pseudo-builder.
+Pseudo-builders behave like builders, but allow flexibility in task construction handling with
+user-defined arguments. We will use the `pathlib` module to help us construct OS-agnostic paths and
+perform path manipulation. At the top of your `SConstruct` file, update the imports as below.
 
-```bash
-$ make sierra.dat
+```python
+import os
+import pathlib
 ```
 
-which gives the output below:
+Now define a new `count_words` pseudo-builder function to replace the `count_word_builders` and add
+it to the construction environment.
 
-```output
-python countwords.py books/sierra.txt sierra.dat
+```python
+def count_words(env, data_file):
+    """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
+
+    Assumes that the source text file is found in `books/{data_file}.txt`
+
+    :param env: SCons construction environment. Do not provide when using this
+        function with the `env.AddMethod` and `env.CountWords` access style.
+    :param data_file: String name of the data file to create.
+    """
+    data_path = pathlib.Path(data_file)
+    text_file = pathlib.Path("books") / data_path.with_suffix[".txt"]
+    target_nodes = env.Command(
+        target=[data_file],
+        source=[text_file, "countwords.py"],
+        action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
+    )
+    return target_nodes
+
+
+env.AddMethod("CountWords", count_words)
+```
+
+This pseudo-builder has further reduced the interface necessary to define the `.dat` tasks, which
+now can be re-written as
+
+```python
+env.CountWords("isles.dat")
+env.CountWords("abyss.dat")
+env.CountWords("last.dat")
+```
+
+This solution is similar to Make 'pattern rules', but it is both more verbose and more flexible.
+Pseudo-builders require a full Python function definition syntax, but they can do more than simple
+extension pattern matching and anything the user requires.
+
+A psuedo-builder alone will not allow us to match arbitrary files using the `.dat` file extension.
+If we desire the full 'pattern rule' behavior, we can accept a target name and match it to our
+pseudo-builder with the SCons
+[`COMMAND_LINE_TARGETS`](https://scons.org/doc/production/HTML/scons-user.html#sect-var-COMMAND-LINE-TARGETS) variable.
+
+Add the following to the bottom of your SConstruct file
+
+```
+for target in COMMAND_LINE_TARGETS:
+    if pathlib.Path(target).suffix == ".dat":
+        env.CountWords(target)
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout

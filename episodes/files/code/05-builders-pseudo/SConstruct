@@ -1,0 +1,41 @@
+import os
+import pathlib
+
+
+env = Environment(ENV=os.environ.copy())
+
+
+def count_words(env, data_file):
+    """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
+
+    Assumes that the source text file is found in `books/{data_file}.txt`
+
+    :param env: SCons construction environment. Do not provide when using this
+        function with the `env.AddMethod` and `env.CountWords` access style.
+    :param data_file: String name of the data file to create.
+    """
+    data_path = pathlib.Path(data_file)
+    text_file = pathlib.Path("books") / data_path.with_suffix(".txt")
+    target_nodes = env.Command(
+        target=[data_file],
+        source=[text_file, "countwords.py"],
+        action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
+    )
+    return target_nodes
+
+
+env.AddMethod(count_words, "CountWords")
+
+env.CountWords("isles.dat")
+env.CountWords("abyss.dat")
+env.CountWords("last.dat")
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
+    action=["python ${SOURCES[0]} ${SOURCES[1:]} > ${TARGET}"],
+)
+
+env.Default(["results.txt"])

@@ -327,7 +327,7 @@ we need to make a couple of small changes so that we can still use special subst
 We'll move `testzipf.py` to be the first source. We could then edit the action
 so that we pass all the dependencies as arguments to python using `${SOURCES}`.
 
-```make
+```python
 env.Command(
     target=["results.txt"],
     source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
@@ -339,7 +339,7 @@ But it would be helpful to clarify the unique role of the `testzipf.py` as a Pyt
 clarify the intended roles for different source files by indexing the sources in our action. SCons
 allows for Python-ic slicing when indexing special substitution variables.
 
-```make
+```python
 env.Command(
     target=["results.txt"],
     source=["testzipf.py", "isles.dat", "abyss.dat", "last.dat"],
