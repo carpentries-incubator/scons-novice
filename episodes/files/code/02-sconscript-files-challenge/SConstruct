@@ -1,0 +1,32 @@
+import os
+
+
+env = Environment(ENV=os.environ.copy())
+
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py books/isles.txt isles.dat"],
+)
+
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt"],
+	action=["python countwords.py books/abyss.txt abyss.dat"],
+)
+
+env.Command(
+    target=["last.dat"],
+    source=["books/last.txt"],
+	action=["python countwords.py books/last.txt last.dat"],
+)
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py abyss.dat isles.dat last.dat > results.txt"],
+)
+
+env.Default(["results.txt"])
