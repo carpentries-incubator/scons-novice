@@ -145,15 +145,15 @@ When we re-run our SConstruct file, SCons now informs us that:
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 scons: Building targets ...
-scons: `isles.dat' is up to date.
+scons: `.' is up to date.
 scons: done building targets.
 ```
 
-This is because our target, `isles.dat`, has now been created, and
-SCons will not create it again. To see how this works, let's pretend to
-update one of the text files. Rather than opening the file in an
-editor, we can use the shell `touch` command to update its timestamp
-(which would happen if we did edit the file):
+SCons uses the special target alias `.` to indicate 'all targets'. No command is run because our
+target, `isles.dat`, has now been created, and SCons will not create it again. To see how this
+works, let's pretend to update one of the text files. Rather than opening the file in an editor, we
+can use the shell `touch` command to update its timestamp (which would happen if we did edit the
+file):
 
 ```bash
 $ touch books/isles.txt
@@ -185,13 +185,13 @@ it does not recreate `isles.dat`.
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 scons: Building targets ...
-scons: `isles.dat' is up to date.
+scons: `.' is up to date.
 scons: done building targets.
 ```
 
-Many build managers, such as [GNU Make](../episodes/01-intro.md#gnu-make) use timestamps to track
-the state of source and target files. If we were using GNU Make, Make would have re-created the
-`isles.dat` file.
+This is a surprising result if you are already familiar with other build managers. Many build
+managers, such as [GNU Make](../episodes/01-intro.md#gnu-make) use timestamps to track the state of
+source and target files. If we were using Make, Make would have re-created the `isles.dat` file.
 
 By default SCons computes content signatures from the file content to track the state of source and
 target files. If the content of a file has not changed, it is considered up-to-date and SCons will
@@ -265,7 +265,7 @@ Let's add another task to the end of `SConstruct`:
 ```python
 env.Command(
     target=["abyss.dat"],
-    source=["books/absyss.txt"],
+    source=["books/abyss.txt"],
 	  action=["python countwords.py books/abyss.txt abyss.dat"],
 )
 ```
@@ -282,17 +282,17 @@ then we get:
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 scons: Building targets ...
-scons: `isles.dat' is up to date.
 python countwords.py books/abyss.txt abyss.dat
 scons: done building targets.
 ```
 
-The first target is reported as up to date and SCons builds the second target. The default behavior
-of SCons is to build all default targets, and unless otherwise specified, all targets are added to
-the default targets list.
+SCons builds the second target but not the first target. The default behavior of SCons is to build
+all default targets and, unless otherwise specified, all targets are added to the default targets
+list.
 
 If we do not want to build all targets, we can also build a specific target by name. First, confirm
-that running SCons again reports both targets up to date.
+that running SCons again reports the special target `.` up to date to indicate that all targets are
+up to date.
 
 ```bash
 $ scons
@@ -302,8 +302,7 @@ $ scons
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 scons: Building targets ...
-scons: `isles.dat' is up to date.
-scons: `abyss.dat' is up to date.
+scons: `.' is up to date.
 scons: done building targets.
 ```
 
@@ -332,8 +331,8 @@ date, then SCons informs us that:
 scons: `isles.dat' is up to date.
 ```
 
-If we ask Make to build a file that exists but for which there is
-no rule in our Makefile, then we get message like:
+If we ask SCons to build a file that exists but for which there is
+no rule in our `SConstruct` file, then we get message like:
 
 ```bash
 $ scons countwords.py
@@ -346,105 +345,123 @@ scons: Nothing to be done for `countwords.py'.
 `up to date` means that the `SConstruct` file has a task with one or more actions
 whose target is the name of a file (or directory) and the file is up to date.
 
-`Nothing to be done` means that
-the file exists but either :
-
-- the `SConstruct` file has no task for it, or
-- the `SConstruct` file has a task for it, but that task has no actions
+`Nothing to be done` means that the file exists but the `SConstruct` file has no task for it.
+Targets that are defined, but have no action result in an empty 'Building targets ...' message
+without issuing any commands.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-We may want to remove all our data files so we can explicitly recreate
-them all. We can introduce a new target, and associated rule, to do
-this. We will call it `clean`, as this is a common name for rules that
-delete auto-generated files, like our `.dat` files:
-
-```make
-clean :
-	rm -f *.dat
-```
-
-This is an example of a rule that has no dependencies. `clean` has no
-dependencies on any `.dat` file as it makes no sense to create these
-just to remove them. We just want to remove the data files whether or
-not they exist. If we run Make and specify this target,
+We may want to remove all our data files so we can explicitly recreate them all. SCons provides the
+`--clean` command line option that will remove targets by request. We can clean all default targets
 
 ```bash
-$ make clean
+scons --clean
 ```
-
-then we get:
 
 ```output
-rm -f *.dat
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Cleaning targets ...
+Removed abyss.dat
+Removed isles.dat
+scons: done cleaning targets.
 ```
 
-There is no actual thing built called `clean`. Rather, it is a
-short-hand that we can use to execute a useful sequence of
-actions. Such targets, though very useful, can lead to problems. For
-example, let us recreate our data files, create a directory called
-`clean`, then run Make:
+or clean all targets with the special target `.`, regardless of the default list contents
 
 ```bash
-$ make isles.dat abyss.dat
-$ mkdir clean
-$ make clean
+scons . --clean
 ```
-
-We get:
 
 ```output
-make: `clean' is up to date.
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Cleaning targets ...
+Removed abyss.dat
+Removed isles.dat
+scons: done cleaning targets.
 ```
 
-Make finds a file (or directory) called `clean` and, as its `clean`
-rule has no dependencies, assumes that `clean` has been built and is
-up-to-date and so does not execute the rule's actions. As we are using
-`clean` as a short-hand, we need to tell Make to always execute this
-rule if we run `make clean`, by telling Make that this is a
-[phony target](../learners/reference.md#phony-target), that it does not build
-anything. This we do by marking the target as `.PHONY`:
-
-```make
-.PHONY : clean
-clean :
-	rm -f *.dat
-```
-
-If we run Make,
+or clean specific targets by name
 
 ```bash
-$ make clean
+scons abyss.dat --clean
 ```
-
-then we get:
 
 ```output
-rm -f *.dat
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Cleaning targets ...
+Removed abyss.dat
+scons: done cleaning targets.
 ```
 
-We can add a similar command to create all the data files. We can put
-this at the top of our Makefile so that it is the [default
-target](../learners/reference.md#default-target), which is executed by default
-if no target is given to the `make` command:
+::::::::::::::::::::::::::::::::::::::::::::::::::
 
-```make
-.PHONY : dats
-dats : isles.dat abyss.dat
+We may want to simplify specification of some, but not all, targets. We can add an alias to
+reference all of the data files.
+
+```python
+env.Alias("dats", ["isles.dat", "absyss.dat"])
 ```
 
-This is an example of a rule that has dependencies that are targets of
-other rules. When Make runs, it will check to see if the dependencies
-exist and, if not, will see if rules are available that will create
-these. If such rules exist it will invoke these first, otherwise
-Make will raise an error.
+This simplifies calling a non-default target list such that we do not have to write out each target
+by name. The following two executions of SCons are equivalent.
+
+```bash
+$ scons isles.dat abyss.dat
+```
+
+```bash
+$ scons dats
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+python countwords.py books/isles.txt isles.dat
+python countwords.py books/abyss.txt abyss.dat
+scons: done building targets.
+```
+
+When requesting specific targets, the requested targets are reported up-to-date according the name
+used on the command line. Calling two targets by name results in individual reports, one per target.
+
+```bash
+$ scons isles.dat abyss.dat
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `isles.dat' is up to date.
+scons: `abyss.dat' is up to date.
+scons: done building targets.
+```
+
+Calling the collector alias `dats` results in a single report for the alias.
+
+```bash
+$ scons dats
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `dats' is up to date.
+scons: done building targets.
+```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Dependencies
 
-The order of rebuilding dependencies is arbitrary. You should not
+The order of rebuilding dependencies is arbitrary. Required sources are always built before targets,
+but if two targets are independent of one another, you should not
 assume that they will be built in the order in which they are
 listed.
 
@@ -455,77 +472,53 @@ depends on that target.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-This rule (`dats`) is also an example of a rule that has no actions. It is used
-purely to trigger the build of its dependencies, if needed.
+Our `SConstruct` now looks like this:
 
-If we run,
+```python
+import os
 
-```bash
-$ make dats
-```
 
-then Make creates the data files:
+env = Environment(ENV=os.environ.copy())
 
-```output
-python countwords.py books/isles.txt isles.dat
-python countwords.py books/abyss.txt abyss.dat
-```
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py books/isles.txt isles.dat"],
+)
 
-If we run `make dats` again, then Make will see that the dependencies (`isles.dat`
-and `abyss.dat`) are already up to date.
-Given the target `dats` has no actions, there is `nothing to be done`:
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt"],
+	  action=["python countwords.py books/abyss.txt abyss.dat"],
+)
 
-```bash
-$ make dats
-```
-
-```output
-make: Nothing to be done for `dats'.
-```
-
-Our Makefile now looks like this:
-
-```make
-# Count words.
-.PHONY : dats
-dats : isles.dat abyss.dat
-
-isles.dat : books/isles.txt
-	python countwords.py books/isles.txt isles.dat
-
-abyss.dat : books/abyss.txt
-	python countwords.py books/abyss.txt abyss.dat
-
-.PHONY : clean
-clean :
-	rm -f *.dat
+env.Alias("dats", ["isles.dat", "abyss.dat"])
 ```
 
 The following figure shows a graph of the dependencies embodied within
-our Makefile, involved in building the `dats` target:
+our SConstruct file, involved in building the `dats` target:
 
-![](fig/02-makefile.png "Dependencies represented within the Makefile"){alt='Dependencies represented within the Makefile'}
+![](fig/02-makefile.png "Dependencies represented within the SConstruct file"){alt='Dependencies represented within the SConstruct file'}
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Write Two New Rules
+## Write Two New Tasks
 
-1. Write a new rule for `last.dat`, created from `books/last.txt`.
-2. Update the `dats` rule with this target.
-3. Write a new rule for `results.txt`, which creates the summary
+1. Write a new task for `last.dat`, created from `books/last.txt`.
+2. Update the `dats` alias with this target.
+3. Write a new task for `results.txt`, which creates the summary
   table. The rule needs to:
   - Depend upon each of the three `.dat` files.
   - Invoke the action `python testzipf.py abyss.dat isles.dat last.dat > results.txt`.
-4. Put this rule at the top of the Makefile so that it is the default target.
-5. Update `clean` so that it removes `results.txt`.
+4. Add this target to the default target list so that it is the default target.
 
-The starting Makefile is [here](files/code/02-makefile/Makefile).
+The starting SConstruct file is [here](files/code/02-sconscript-files/SConstruct).
 
 :::::::::::::::  solution
 
 ## Solution
 
-See [this file](files/code/02-makefile-challenge/Makefile) for a solution.
+See [this file](files/code/02-sconscript-files-challenge/SConstruct) for a solution.
 
 
 
@@ -534,17 +527,20 @@ See [this file](files/code/02-makefile-challenge/Makefile) for a solution.
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 The following figure shows the dependencies embodied within our
-Makefile, involved in building the `results.txt` target:
+SConstruct file, involved in building the `results.txt` target:
 
-![](fig/02-makefile-challenge.png "results.txt dependencies represented within the Makefile"){alt='results.txt dependencies represented within the Makefile'}
+![](fig/02-makefile-challenge.png "results.txt dependencies represented within the SConstruct file"){alt='results.txt dependencies represented within the SConstruct file'}
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `#` for comments in Makefiles.
-- Write rules as `target: dependencies`.
-- Specify update actions in a tab-indented block under the rule.
-- Use `.PHONY` to mark targets that don't correspond to files.
+- SConstruct is the default name of the root SCons configuration file
+- SCons configuration files are collectively called SConscript files
+- SConscript files are Python files.
+- SCons tasks are attached to a construction environment, which can be inherited from the shell's
+  active environment.
+- Use `#` for comments in SConscript files.
+- Write tasks as lists of targets, sources, and actions with the `Command` class
+- Use an `Alias` to collect targets in a convenient alias for shorter build commands.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
