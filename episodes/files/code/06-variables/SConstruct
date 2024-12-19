@@ -4,6 +4,7 @@ import pathlib
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
+TEXT_FILES = Glob("books/*.txt")
 
 env = Environment(ENV=os.environ.copy())
 

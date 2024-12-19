@@ -84,6 +84,16 @@ contains a solution to this challenge.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
+:::::::::::::::::::::::::::::::::::::::::  callout
+
+## Where We Are
+
+[This Makefile](files/code/06-variables/SConstruct)
+contains all of our work so far.
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
 - Define variables by assigning values to names with Python syntax
