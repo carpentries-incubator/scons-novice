@@ -1,14 +1,15 @@
 ---
-title: Makefiles
+title: SConscript files
 teaching: 30
 exercises: 10
 ---
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Recognize the key parts of a Makefile, rules, targets, dependencies and actions.
-- Write a simple Makefile.
-- Run Make from the shell.
+- Recognize the key parts of the SConstruct file, tasks, targets, sources, and
+  actions.
+- Write a simple SConstruct file.
+- Run SCons from the shell.
 - Explain when and why to mark targets as `.PHONY`.
 - Explain constraints on dependencies.
 
@@ -16,51 +17,53 @@ exercises: 10
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How do I write a simple Makefile?
+- How do I write a simple SConstruct file?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Create a file, called `Makefile`, with the following content:
+Create a file, called `SConstruct`, with the following content:
 
-```make
+```python
 # Count words.
-isles.dat : books/isles.txt
-	python countwords.py books/isles.txt isles.dat
+Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py books/isles.txt isles.dat"],
+)
 ```
 
-This is a [build file](../learners/reference.md#build-file), which for
-Make is called a [Makefile](../learners/reference.md#makefile) - a file
-executed by Make. Note how it resembles one of the lines from our shell script.
+This is a [build file](../learners/reference.md#build-file), which for SCons is called an
+[SConscript](../learners/reference.md#makefile) file - a file executed by SCons. `SConstruct` is the
+conventional name for the root `SConscript` files, which is the generic name for all SCons build
+files.
+
+The syntax should be familiar to [Python](https://www.python.org/) users because SCons uses Python
+as the configuration language. Note how the action resembles a line from our shell script.
 
 Let us go through each line in turn:
 
 - `#` denotes a *comment*. Any text from `#` to the end of the line is
-  ignored by Make but could be very helpful for anyone reading your Makefile.
+  ignored by SCons but could be very helpful for anyone reading your SConstruct file.
 - `isles.dat` is a [target](../learners/reference.md#target), a file to be
   created, or built.
-- `books/isles.txt` is a [dependency](../learners/reference.md#dependency), a
-  file that is needed to build or update the target. Targets can have
-  zero or more dependencies.
-- A colon, `:`, separates targets from dependencies.
+- `books/isles.txt` is a [source](../learners/reference.md#source), also called a
+  [dependency](../learners/reference.md#dependency), a file that is needed to build or update the
+  target. Targets can have one or more dependencies.
 - `python countwords.py books/isles.txt isles.dat` is an
   [action](../learners/reference.md#action), a command to run to build or
-  update the target using the dependencies. Targets can have zero or more
+  update the target using the sources. Targets can have one or more
   actions. These actions form a recipe to build the target
-  from its dependencies and are executed similarly to a shell script.
-- Actions are indented using a single TAB character, *not* 8 spaces. This
-  is a legacy of Make's 1970's origins. If the difference between
-  spaces and a TAB character isn't obvious in your editor, try moving
-  your cursor from one side of the TAB to the other. It should jump
-  four or more spaces.
-- Together, the target, dependencies, and actions form a
-  [rule](../learners/reference.md#rule).
+  from its sources and are executed similarly to a shell script.
+- Targets, sources, and actions are passed as keyword arguments and may be a string or a list of
+  strings.
+- Together, the target, sources, and actions form a [task](../learners/reference.md#task).
 
-Our rule above describes how to build the target `isles.dat` using the
-action `python countwords.py` and the dependency `books/isles.txt`.
+Our task above describes how to build the target `isles.dat` using the
+action `python countwords.py` and the source `books/isles.txt`.
 
 Information that was implicit in our shell script - that we are
 generating a file called `isles.dat` and that creating this file
-requires `books/isles.txt` - is now made explicit by Make's syntax.
+requires `books/isles.txt` - is now made explicit by SCons' syntax.
 
 Let's first ensure we start from scratch and delete the `.dat` and `.png`
 files we created earlier:
@@ -243,7 +246,7 @@ the file exists but either :
 
 - the Makefile has no rule for it, or
 - the Makefile has a rule for it, but that rule has no actions
-  
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
