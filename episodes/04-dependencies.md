@@ -212,24 +212,26 @@ scons: `results.txt' is up to date.
 scons: done building targets.
 ```
 
-In a timestamp based build manager, such as Make, the whole pipeline would be triggered, even the
-creation of the
-`results.txt` file! To understand this, note that according to the
+The whole pipeline is triggered, starting with the `.dat` files and finishing with the requested
+`results.txt` file!
+To understand this, note that according to the
 dependency figure, `results.txt` depends on the `.dat` files. The
 update of `countwords.py` triggers an update of the `*.dat`
-files. Thus, `make` sees that the dependencies (the `.dat` files) are
-newer than the target file (`results.txt`) and thus it recreates
+files. Finally, SCons reports that the requested `results.txt` file is still up to date.
+
+In a timestamp based build manager, such as Make, the build manager would see that the dependencies
+(the `.dat` files) are newer than the target file (`results.txt`) and thus it recreates
 `results.txt`.
 
-With SCons, the `.dat` files are recreated because the source `wordcount.py` has changed. The
-`results.txt` file is not recreated because the intermediate `.dat` files contain the same content
-as the first time we created the `results.txt` file, which is not out-of-date.
+With SCons, the `results.txt` file is not recreated because the recreated intermediate `.dat` files
+contain the same content as the first time we created the `results.txt` file, which is therefore not
+out-of-date.
 
 Both behaviors are examples of the power of a build manager: updating a
 subset of the files in the pipeline triggers rerunning the appropriate
-downstream steps. The added benefit to stopping a workflow early if intermediate files have not
-changed is a desirable of SCons for computational science and engineering, where some tasks may
-require hours to days to complete.
+downstream steps. The added benefit to stopping a pipeline early if intermediate files' contents
+have not changed is a desirable of SCons for computational science and engineering, where some tasks
+may require hours to days to complete.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
