@@ -347,12 +347,33 @@ env.Command(
 )
 ```
 
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Index the `.dat` task actions
+
+Index the sources for `.dat` task actions without changing the source file order. Remember that
+SCons allows Python-ic slicing when indexing special substitution variables.
+
+:::::::::::::::  solution
+
+## Solution
+
+SCons allows reverse indexing with the Python style `[-1]` slice
+
+```python
+    action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
+```
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Where We Are
 
-[This SConstruct file](files/code/04-dependencies/SConstruct)
+[This SConstruct file](files/code/04-dependencies-challenges/SConstruct)
 contains everything done so far in this topic.
 
 
@@ -367,5 +388,4 @@ contains everything done so far in this topic.
   change after recreation.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
