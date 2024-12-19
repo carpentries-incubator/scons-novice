@@ -59,12 +59,12 @@ script `countwords.py` that processes the text files and creates the
 data files. A change to `countwords.py` (e.g. adding a new column of
 summary data or removing an existing one) results in changes to the
 `.dat` files it outputs. So, let's pretend to edit `countwords.py`,
-using `touch`, and re-run Make:
+using `echo` to append a blank line, and re-run SCons:
 
 ```bash
-$ make dats
-$ touch countwords.py
-$ make dats
+$ scons dats
+$ echo "" >> countwords.py
+$ scons dats
 ```
 
 Nothing happens! Though we've updated `countwords.py` our data files
@@ -74,44 +74,99 @@ record any dependencies on `countwords.py`.
 We need to add `countwords.py` as a dependency of each of our
 data files also:
 
-```make
-isles.dat : books/isles.txt countwords.py
-	python countwords.py $< $@
+```python
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt", "countwords.py"],
+    action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
 
-abyss.dat : books/abyss.txt countwords.py
-	python countwords.py $< $@
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt", "countwords.py"],
+	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
 
-last.dat : books/last.txt countwords.py
-	python countwords.py $< $@
+env.Command(
+    target=["last.dat"],
+    source=["books/last.txt", "countwords.py"],
+	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
 ```
 
-If we pretend to edit `countwords.py` and re-run Make,
+If we re-run SCons,
 
 ```bash
-$ touch countwords.py
-$ make dats
+$ scons dats
 ```
 
 then we get:
 
 ```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
 python countwords.py books/isles.txt isles.dat
 python countwords.py books/abyss.txt abyss.dat
 python countwords.py books/last.txt last.dat
+scons: done building targets.
+```
+
+SCons tracks the source list as part of the task signature. Adding a new source triggers a rebuild
+of the targets. Now if we edit the `countwords.py` file, the targets will re-build again.
+
+```bash
+# echo "" >> countwords.py
+$ scons dats
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+python countwords.py books/isles.txt isles.dat
+python countwords.py books/abyss.txt abyss.dat
+python countwords.py books/last.txt last.dat
+scons: done building targets.
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ## Dry run
 
-`make` can show the commands it will execute without actually running them if we pass the `-n` flag:
+`scons` can show the commands it will execute without actually running them if we pass the
+`--dry-run` flag:
 
 ```bash
-$ touch countwords.py
-$ make -n dats
+$ echo "" >> countwords.py
+$ scons --dry-run dats
 ```
 
-This gives the same output to the screen as without the `-n` flag, but the commands are not actually run. Using this 'dry-run' mode is a good way to check that you have set up your Makefile properly before actually running the commands in it.
+This gives the same output to the screen as without the `--dry-run` flag, but the commands are not actually
+run. Using this 'dry-run' mode is a good way to check that you have set up your SConscript tasks
+properly before actually running the commands.
+
+You can also get an explanation for why SCons would like to recreate the targets with the
+`--debug=explain` option. This is helpful when the dry run shows commands you did not expect to run
+and you need help tracking down the incorrect task definition.
+
+```bash
+$ echo "" >> countwords.py
+$ scons --dry-run --debug=explain dats
+```
+
+```output
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: rebuilding `isles.dat' because `countwords.py' changed
+python countwords.py books/isles.txt isles.dat
+scons: rebuilding `abyss.dat' because `countwords.py' changed
+python countwords.py books/abyss.txt abyss.dat
+scons: rebuilding `last.dat' because `countwords.py' changed
+python countwords.py books/last.txt last.dat
+scons: done building targets.
+```
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
