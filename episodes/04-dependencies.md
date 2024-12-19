@@ -360,8 +360,11 @@ contains everything done so far in this topic.
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Make results depend on processing scripts as well as data files.
-- Dependencies are transitive: if A depends on B and B depends on C, a change to C will indirectly trigger an update to A.
+- SCons results depend on processing scripts as well as data files.
+- Dependencies are transitive: if A depends on B and B depends on C, a change to C will indirectly
+  trigger the pipeline to update to A.
+- SCons content signatures help prevent recomputing work if intermediate targets' contents do not
+  change after recreation.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
