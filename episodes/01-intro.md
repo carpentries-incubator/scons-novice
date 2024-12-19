@@ -6,8 +6,8 @@ exercises: 0
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Explain what Make is for.
-- Explain why Make differs from shell scripts.
+- Explain what SCons is for.
+- Explain why SCons differs from shell scripts.
 - Name other popular build tools.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -258,13 +258,13 @@ What we really want is an executable *description* of our pipeline that
 allows software to do the tricky part for us:
 figuring out what steps need to be rerun.
 
-For our pipeline Make can execute the commands needed to run our
+For our pipeline SCons can execute the commands needed to run our
 analysis and plot our results. Like shell scripts it allows us to
 execute complex sequences of commands via a single shell
 command. Unlike shell scripts it explicitly records the dependencies
 between files - what files are needed to create what other files -
 and so can determine when to recreate our data files or
-image files, if our text files change. Make can be used for any
+image files, if our text files change. SCons can be used for any
 commands that follow the general pattern of processing files to create
 new files, for example:
 
@@ -275,11 +275,10 @@ new files, for example:
 - Parse and combine text files and plots to create papers.
 - Compile source code into executable programs or libraries.
 
-There are now many build tools available, for example [Apache
-ANT][apache-ant], [doit], and [nmake] for Windows.
-Which is best for you depends on your requirements,
-intended usage, and operating system. However, they all share the same
-fundamental concepts as Make.
+There are now many build tools available, for example [GNU Make][gnu-make], [Apache
+ANT][apache-ant], [doit], and [nmake] for Windows.  Which is best for you depends on your
+requirements, intended usage, and operating system. However, they all share the same fundamental
+concepts as SCons.
 
 Also, you might come across build generation scripts e.g. [GNU
 Autoconf][autoconf] and [CMake][cmake].  Those tools do not run the
@@ -326,8 +325,6 @@ Make, we mean GNU Make.
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Make allows us to specify what depends on what and how to update things that are out of date.
+- SCons allows us to specify what depends on what and how to update things that are out of date.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
