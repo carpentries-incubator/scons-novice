@@ -258,7 +258,8 @@ text_files=Glob("books/*.txt")
 List comprehensions:
 
 Python has a [list comprehension][list-comprehension] feature for constructing lists. In combination
-with the [pathlib][pathlib] OS agnostic path manipulation can be performed on lists of files.
+with the [pathlib][pathlib] module, OS agnostic path manipulation can be performed on lists of
+files.
 
 ```python
 import pathlib
