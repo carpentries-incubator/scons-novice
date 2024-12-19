@@ -13,34 +13,45 @@ exercises: 5
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I write a Makefile to update things when my scripts have changed rather than my input files?
+- How can I write an SConsript file to update things when my scripts have changed rather than my input files?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Our Makefile now looks like this:
+Our SConstruct file now looks like this:
 
-```make
-# Generate summary table.
-results.txt : isles.dat abyss.dat last.dat
-	python testzipf.py $^ > $@
+```python
+import os
 
-# Count words.
-.PHONY : dats
-dats : isles.dat abyss.dat last.dat
 
-isles.dat : books/isles.txt
-	python countwords.py $< $@
+env = Environment(ENV=os.environ.copy())
 
-abyss.dat : books/abyss.txt
-	python countwords.py $< $@
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
 
-last.dat : books/last.txt
-	python countwords.py $< $@
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt"],
+	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
 
-.PHONY : clean
-clean :
-	rm -f *.dat
-	rm -f results.txt
+env.Command(
+    target=["last.dat"],
+    source=["books/last.txt"],
+	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+)
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=["isles.dat", "abyss.dat", "last.dat"],
+    action=["python testzipf.py ${SOURCES} > ${TARGET}"],
+)
+
+env.Default(["results.txt"])
 ```
 
 Our data files are produced using not only the input text files but also the
