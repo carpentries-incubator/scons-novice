@@ -373,7 +373,7 @@ SCons allows reverse indexing with the Python style `[-1]` slice
 
 ## Where We Are
 
-[This SConstruct file](files/code/04-dependencies-challenges/SConstruct)
+[This SConstruct file](files/code/04-dependencies-challenge/SConstruct)
 contains everything done so far in this topic.
 
 
