@@ -6,7 +6,7 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Write SConstruct that use functions to match and transform sets of files.
+- Write SConscript files that use functions to match and transform sets of files.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
