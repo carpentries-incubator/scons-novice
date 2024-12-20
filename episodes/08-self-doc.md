@@ -19,8 +19,8 @@ exercises: 0
 Many bash commands, and programs that people have written that can be
 run from within bash, support a `--help` flag to display more
 information on how to use the commands or programs. In this spirit, it
-can be useful, both for ourselves and for others, to provide a `help`
-target in our SConstruct file. This can provide a summary of the names of
+can be useful, both for ourselves and for others, to provide a `--help`
+option in our SConstruct file. This can provide a summary of the names of
 the key targets and what they do, so we don't need to look at the
 SConstruct file itself unless we want to.
 
@@ -47,14 +47,7 @@ Where SCons is composing the help message for our custom command-line options fo
 how would we implement this? We could call `Help` like:
 
 ```python
-help_message = (
-    "\n\n"
-    "Default Targets:\n"
-    "  results.txt\n"
-    "\n"
-    "Aliases:\n"
-    "  dats"
-)
+help_message = "\n\nDefault Targets:\n  results.txt\n\nAliases:\n  dats"
 env.Help(help_message, append=True, keep_local=True)
 ```
 
@@ -83,7 +76,9 @@ def return_help_content(nodes, message="", help_content=dict()):
     overwrite existing keys.
 
     :param nodes: SCons node objects, e.g. targets and aliases
-    :param message: Help message to assign to every node in nodes
+    :param str message: Help message to assign to every node in nodes
+    :param dict help_content: Optional dictionary with target help messages
+        ``{target: help}``
 
     :returns: Dictionary of {node: message} string pairs
     :rtype: dict
@@ -101,11 +96,14 @@ def project_help(help_content=dict()):
     :param dict help_content: Optional dictionary with target help messages
         ``{target: help}``
     """
-    def add_content(nodes, help_content=help_content, message=""):
+    def add_content(nodes, message="", help_content=help_content):
         """Append a help message for all nodes using provided help content if
         available.
 
         :param nodes: SCons node objects, e.g. targets and aliases
+        :param str message: Help message to assign to every node in nodes
+        :param dict help_content: Optional dictionary with target help messages
+            ``{target: help}``
 
         :returns: appended help message
         :rtype: str

@@ -1,8 +1,6 @@
 import os
 import pathlib
 
-env = Environment(ENV=os.environ.copy())
-
 
 def count_words(env, data_file):
     """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
@@ -22,7 +20,7 @@ def count_words(env, data_file):
     )
     return target_nodes
 
-
+env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
 
 env.CountWords("isles.dat")

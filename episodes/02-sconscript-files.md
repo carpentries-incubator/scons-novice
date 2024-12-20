@@ -10,7 +10,7 @@ exercises: 10
   actions.
 - Write a simple SConstruct file.
 - Run SCons from the shell.
-- Explain when and why to mark targets as `.PHONY`.
+- Explain how to create aliases for collections of targets.
 - Explain constraints on dependencies.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -25,7 +25,6 @@ Create a file, called `SConstruct`, with the following content:
 
 ```python
 import os
-
 
 env = Environment(os.environ.copy())
 
@@ -50,19 +49,18 @@ as the configuration language. Note how the action resembles a line from our she
 
 Let us go through each section in turn:
 
-- First we import the `os` module and create an SCons with a copy of the active shell environment
-  [construction
+- First we import the `os` module and create an SCons [construction
   environment](https://scons.org/doc/production/HTML/scons-user.html#sect-construction-environments).
-  Most build managers inherit the active shell environment by default. SCons requires a little more
-  effort, but this separation of construction environment from the external environment is valuable in
-  complex computational science and engineering workflows which may require several, mutually
-  exclusive environments for each task in a single workflow or project. For the purposes of this
-  lesson, we will use a single construction environment inherited from the shell's active Conda
-  environment.
+  as a copy of the active shell environment. Most build managers inherit the active shell environment
+  by default. SCons requires a little more effort, but this separation of construction environment
+  from the external environment is valuable in complex computational science and engineering
+  workflows which may require several mutually exclusive environments in a single workflow. For the
+  purposes of this lesson, we will use a single construction environment inherited from the shell's
+  active Conda environment.
 - `#` denotes a *comment*. Any text from `#` to the end of the line is
   ignored by SCons but could be very helpful for anyone reading your SConstruct file.
 - `env.Command` is the generic task definition class used by SCons. Note that the task is defined
-  inside a construction environment we created earlier. If there were more than one construction
+  inside the construction environment we created earlier. If there were more than one construction
   environment available, additional tasks could use unique, task specific, construction
   environments.
 - `isles.dat` is a [target](../learners/reference.md#target), a file to be
@@ -125,11 +123,11 @@ The first 5 lines of `isles.dat` should look exactly like before.
 ## The SConstruct File Does Not Have to be Called `SConstruct`
 
 We don't have to call our root SCons configuration file `SConstruct`. However, if we call it
-something else we need to tell SCons where to find it. This we can do using `-f` flag. For example,
-if our SConstruct file is named `MyOtherSConstruct`:
+something else we need to tell SCons where to find it. This we can do using `--sconstruct` option.
+For example, if our SConstruct file is named `MyOtherSConstruct`:
 
 ```bash
-$ scons -f MyOtherSConstruct
+$ scons --sconstruct=MyOtherSConstruct
 ```
 
 SCons does not require a specific file extension. The suffix `.scons` can be used to identify
@@ -149,7 +147,7 @@ scons: `.' is up to date.
 scons: done building targets.
 ```
 
-SCons uses the special target alias `.` to indicate 'all targets'. No command is run because our
+SCons uses the special target alias '`.`' to indicate 'all targets'. No command is run because our
 target, `isles.dat`, has now been created, and SCons will not create it again. To see how this
 works, let's pretend to update one of the text files. Rather than opening the file in an editor, we
 can use the shell `touch` command to update its timestamp (which would happen if we did edit the
@@ -179,7 +177,7 @@ If we run SCons again,
 $ scons
 ```
 
-it does not recreate `isles.dat`.
+it does not recreate `isles.dat`. Instead reporting that 'all targets' are up to date.
 
 ```output
 scons: Reading SConscript files ...
@@ -214,21 +212,20 @@ $ md5sum books/isles.dat
 6cc2c020856be849418f9d744ac1f5ee  books/isles.txt
 ```
 
+Append an empty newline to the `books/isles.txt` file and check the `md5sum` signature again.
+
 ```bash
 $ echo "" >> books/isles.txt
-```
-
-We can see that appending a blank newline changes the computed content signature.
-
-```bash
 $ md5sum books/isles.dat
 ```
 
 ```output
 22b5adfc3b267e2e658ba75de4aeb74b  books/isles.txt
 ```
-If we run SCons again, it will re-create `isles.dat` because the content of the source file
-`books/isles.txt` has changed.
+
+We can see that appending a blank newline changes the computed content signature. If we run SCons
+again, it will re-create `isles.dat` because the content of the source file `books/isles.txt` has
+changed.
 
 ```bash
 $ scons
@@ -291,7 +288,7 @@ all default targets and, unless otherwise specified, all targets are added to th
 list.
 
 If we do not want to build all targets, we can also build a specific target by name. First, confirm
-that running SCons again reports the special target `.` up to date to indicate that all targets are
+that running SCons again reports the special target '`.`' up to date to indicate that all targets are
 up to date.
 
 ```bash
@@ -346,7 +343,7 @@ scons: Nothing to be done for `countwords.py'.
 whose target is the name of a file (or directory) and the file is up to date.
 
 `Nothing to be done` means that the file exists but the `SConstruct` file has no task for it.
-Targets that are defined, but have no action result in an empty 'Building targets ...' message
+Targets that are defined, but have no action, result in an empty 'Building targets ...' message
 without issuing any commands.
 
 
@@ -368,7 +365,7 @@ Removed isles.dat
 scons: done cleaning targets.
 ```
 
-or clean all targets with the special target `.`, regardless of the default list contents
+or clean all targets with the special target '`.`', regardless of the default list contents
 
 ```bash
 scons . --clean
@@ -475,7 +472,6 @@ Our `SConstruct` now looks like this:
 ```python
 import os
 
-
 env = Environment(ENV=os.environ.copy())
 
 env.Command(
@@ -494,7 +490,7 @@ env.Alias("dats", ["isles.dat", "abyss.dat"])
 ```
 
 The following figure shows a graph of the dependencies embodied within
-our SConstruct file, involved in building the `dats` target:
+our SConstruct file, involved in building the `dats` alias:
 
 ![](fig/02-makefile.png "Dependencies represented within the SConstruct file"){alt='Dependencies represented within the SConstruct file'}
 
@@ -504,10 +500,9 @@ our SConstruct file, involved in building the `dats` target:
 
 1. Write a new task for `last.dat`, created from `books/last.txt`.
 2. Update the `dats` alias with this target.
-3. Write a new task for `results.txt`, which creates the summary
-  table. The rule needs to:
-  - Depend upon each of the three `.dat` files.
-  - Invoke the action `python testzipf.py abyss.dat isles.dat last.dat > results.txt`.
+3. Write a new task for `results.txt`, which creates the summary table. The rule needs to:
+   - Depend upon each of the three `.dat` files.
+   - Invoke the action `python testzipf.py abyss.dat isles.dat last.dat > results.txt`.
 4. Add this target to the default target list so that it is the default target.
 
 The starting SConstruct file is [here](files/code/02-sconscript-files/SConstruct).
@@ -539,8 +534,7 @@ SConstruct file, involved in building the `results.txt` target:
 - Use `#` for comments in SConscript files.
 - Write tasks as lists of targets, sources, and actions with the `Command` class
 - Use an `Alias` to collect targets in a convenient alias for shorter build commands.
-- Use the `Default` function to limit the number of default targets from all targets to some subset
-  of targets.
+- Use the `Default` function to limit the number of default targets to a subset of all targets.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

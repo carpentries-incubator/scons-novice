@@ -5,8 +5,6 @@ COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
 
-env = Environment(ENV=os.environ.copy())
-
 
 def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
     """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
@@ -29,6 +27,7 @@ def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
     return target_nodes
 
 
+env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
 
 env.CountWords("isles.dat")

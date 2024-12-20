@@ -21,7 +21,7 @@ Despite our efforts, our SConstruct still has repeated content, i.e.  the progra
 scripts, `python`. Additionally, if we renamed our scripts we'd have to hunt through our SConstruct
 file in multiple places.
 
-We can introduce a Python [variables](../learners/reference.md#variable) after the import statements
+We can introduce Python [variables](../learners/reference.md#variable) after the import statements
 in `SConstruct` to hold our script name:
 
 ```python
@@ -30,7 +30,8 @@ COUNT_SOURCE = "countwords.py"
 
 This is a variable [assignment](../learners/reference.md#assignment) -
 `COUNT_SOURCE` is assigned the value `"countwords.py"` and behaves like (actually is) normal Python
-variable assignment.
+variable assignment. The all capitals naming convention indicates that the variable is intended for
+use as a setting or constant value.
 
 We can do the same thing with the interpreter language used to run the script:
 
@@ -89,8 +90,6 @@ us create `scons_lesson_configuration.py` from the content below.
 ```python
 import pathlib
 
-import SCons
-
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
@@ -129,8 +128,9 @@ from scons_lesson_configuration import *
 ```
 
 Note that the above import statement merges the module namespace into the SConstruct file namespace.
-We must be careful to avoid re-using variable and function names, which would overwrite the names
-provided by our module.
+We must be careful to avoid re-defining variable and function names provided by
+`scons_lesson_configuration.py` in our `SConstruct` file, which would overwrite the names provided
+by our module and lead to unexpected behavior.
 
 We can re-run SCons to see that everything still works:
 
@@ -154,7 +154,7 @@ contain all of our work so far.
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
 - Define variables by assigning values to names with Python syntax
-- Reference variables using SCons substitution syntax `${...}`.
+- Reference variables in action strings using SCons substitution syntax `${...}`.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

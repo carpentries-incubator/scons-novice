@@ -51,7 +51,7 @@ contain a simple solution to this challenge.
 
 Can you think of a way to reduce duplication in `count_words` and `plot_counts` functions?
 
-To remove all targets, use the SCons special `.` target and the `--clean` flag.
+To remove all targets, use the SCons special '`.`' target and the `--clean` flag.
 
 ```bash
 scons . --clean
@@ -61,7 +61,7 @@ scons . --clean
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-The following figure shows the dependencies involved in building the `.` or 'all'
+The following figure shows the dependencies involved in building the '`.`' or 'all'
 target, once we've added support for images:
 
 ![](fig/09-conclusion-challenge-1.png "results.txt dependencies once images have been added"){alt='results.txt dependencies once images have been added'}

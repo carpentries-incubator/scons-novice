@@ -52,11 +52,10 @@ history. Command line control of `SConstruct` files is documented in the SCons U
 Options](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-options) and
 [Command-Line Build
 Variables](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-variables)
-[Command-Line
 
 ## SCons Variables and Shell Variables
 
-`SConstruct` define shell commands, as the actions that are executed to update an object. More
+`SConscript` files define shell commands, as the actions that are executed to update an object. More
 complex actions could well include shell variables. There are several ways in which SCons special
 substitution variables and shell variables can be confused and can be in conflict.
 
@@ -96,7 +95,7 @@ books = "abyss isles"
 plots = Command(
     target=[f"{book}.png" for book in books.split(" ")],
     source=[f"{book}.dat" for book in books.split(" ")],
-    action=[for book in ${books}; do python plotcount.py $book.dat $book.png; done"],
+    action=["for book in ${books}; do python plotcounts.py $book.dat $book.png; done"],
     books=books,
 )
 Alias("plots", plots)
@@ -105,14 +104,13 @@ Alias("plots", plots)
 the action that would be passed to the shell to execute would be:
 
 ```bash
-for book in abyss isles; do python plotcount.py ook.dat ook.png; done
+for book in abyss isles; do python plotcounts.py ; done
 ```
 
 Notice that SCons substituted `${books}`, as expected, but it also
 substituted `$book`, even though we intended it to be a shell variable.
-Moreover, because we didn't use `${NAME}` syntax, SCons
-interpreted it as the single character variable `$b` (which we haven't
-defined, so it has a empty string value) followed by the text "ook".
+Moreover, because we didn't pass a `book` keyword argument, SCons
+substituted an empty string '`""`' by default.
 
 In order to get the desired behavior, we have to write `$$book` instead
 of `$book`:
@@ -122,7 +120,7 @@ books = "abyss isles"
 plots = Command(
     target=[f"{book}.png" for book in books.split(" ")],
     source=[f"{book}.dat" for book in books.split(" ")],
-    action=[for book in ${books}; do python plotcount.py $$book.dat $$book.png; done"],
+    action=[for book in ${books}; do python plotcounts.py $$book.dat $$book.png; done"],
     books=books,
 )
 Alias("plots", plots)
