@@ -136,7 +136,10 @@ We can construct a list of data files with a list comprehension that performs pa
 the text files list. We will use the `pathlib` module again for OS-agnostic path separators.
 
 ```python
-DATA_FILES = [pathlib.Path(str(text_file)).with_suffix(".dat").name for text_file in TEXT_FILES]
+DATA_FILES = [
+    pathlib.Path(str(text_file)).with_suffix(".dat").name
+    for text_file in TEXT_FILES
+]
 ```
 
 We can extend `variables` to show the value of `DATA_FILES` too. Recovering the SCons node object
@@ -274,7 +277,7 @@ words in our books is indeed around 2, as predicted by Zipf's Law,
 i.e., the most frequently-occurring word occurs approximately twice as
 often as the second most frequent word.  Here is our final SConstruct file:
 
-```make
+```python
 import os
 import pathlib
 
@@ -282,7 +285,10 @@ COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
 TEXT_FILES = Glob("books/*.txt")
-DATA_FILES = [pathlib.Path(str(text_file)).with_suffix(".dat").name for text_file in TEXT_FILES]
+DATA_FILES = [
+    pathlib.Path(str(text_file)).with_suffix(".dat").name
+    for text_file in TEXT_FILES
+]
 
 AddOption(
     "--variables",
