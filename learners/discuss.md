@@ -52,7 +52,6 @@ history. Command line control of `SConstruct` files is documented in the SCons U
 Options](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-options) and
 [Command-Line Build
 Variables](https://scons.org/doc/production/HTML/scons-user.html#sect-command-line-variables)
-[Command-Line
 
 ## SCons Variables and Shell Variables
 
