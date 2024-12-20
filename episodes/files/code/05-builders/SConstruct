@@ -1,7 +1,6 @@
 import os
 import pathlib
 
-
 env = Environment(ENV=os.environ.copy())
 
 count_words_builder = env.Builder(
