@@ -35,8 +35,9 @@ experience with using the shell to list directories, create, copy,
 remove and list files and directories, and run simple scripts is
 necessary.
 
-[SCons](https://scons.org/) uses the [Python](https://www.python.org/) language as the configuration
-language. A working knowledge of Python basics is helpful.
+[SCons](https://scons.org/) uses [Python](https://www.python.org/) as
+the configuration language. A working knowledge of Python basics is
+helpful.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
