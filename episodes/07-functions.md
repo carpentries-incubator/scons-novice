@@ -360,7 +360,8 @@ now we have introduced our function:
 ## Where We Are
 
 [This SConstruct file](files/code/07-functions/SConstruct)
-contains all of our work so far.
+and this [Python module](files/code/07-functions/scons_lesson_configuration.py)
+contain all of our work so far.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
