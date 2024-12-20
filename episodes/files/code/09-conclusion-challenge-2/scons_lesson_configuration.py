@@ -10,6 +10,12 @@ DATA_FILES = [
     pathlib.Path(str(text_file)).with_suffix(".dat").name
     for text_file in TEXT_FILES
 ]
+PNG_SOURCE = "plotcounts.py"
+PLOT_FILES = [
+    pathlib.Path(data_file).with_suffix(".png").name
+    for data_file in DATA_FILES
+]
+CODE_FILES = Glob("*.py")
 
 
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):

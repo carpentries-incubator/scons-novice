@@ -6,8 +6,6 @@ from SCons.Script import DEFAULT_TARGETS
 
 from scons_lesson_configuration import *
 
-CODE_FILES = Glob("*.py")
-
 AddOption(
     "--variables",
     action="store_true",
