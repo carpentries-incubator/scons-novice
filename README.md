@@ -6,7 +6,7 @@ repository at commit [ba7c2dd](https://github.com/swcarpentry/make-novice)
 
 The following instructions are adopted from https://carpentries.github.io/workbench/
 
-## Environment
+## Site Environment
 
 Install Conda and create an environment from the conda-forge channel. You may need to re-direct
 ``TMPDIR`` if ``/tmp`` is mounted without execute permissions.
@@ -29,6 +29,16 @@ Build once without interactive, locally web-hosted URL: [build lesson](https://c
 
 ```
 $ R -e 'sandpaper::build_lesson(preview = FALSE)'
+```
+
+## Site and Lessons Environment
+
+The combined environment for building the site and running the lessons can be built from the version
+controlled `environment.yml` file. This is the environment used by the CI server for testing.
+
+```
+$ conda env create --name scons-lesson-dev --file environment.yml
+$ TMPDIR=/scratch/$USER/workbench R -e 'install.packages(c("sandpaper", "varnish", "pegboard", "tinkr"), repos = list(carpentries="https://carpentries.r-universe.dev/", CRAN="https://cloud.r-project.org"))'
 ```
 
 -----

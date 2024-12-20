@@ -2,6 +2,7 @@ channels:
   - conda-forge
 
 dependencies:
+  # For building the lessons website
   - 'git>=2.28'
   - 'r-base>=3.6'
   - 'pandoc>=2.11'
@@ -11,3 +12,8 @@ dependencies:
   - r-pkgdown
   - r-httpuv
   - r-servr
+  # For testing the lessons
+  - python
+  - scons
+  - numpy
+  - matplotlib
