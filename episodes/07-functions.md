@@ -30,7 +30,7 @@ env = Environment(ENV=os.environ.copy())
 
 
 def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
-    """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
+    """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
 
     Assumes that the source text file is found in `books/{data_file}.txt`
 
@@ -174,7 +174,7 @@ by `Command` and compile the full list of target nodes to return from our psuedo
 
 ```python
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
-    """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
+    """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
 
     Assumes that the source text file is found in `books/{data_file}.txt`
 
@@ -306,7 +306,7 @@ env = Environment(ENV=os.environ.copy())
 
 
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
-    """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
+    """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
 
     Assumes that the source text files are found in `books/{data_file}.txt`
 
