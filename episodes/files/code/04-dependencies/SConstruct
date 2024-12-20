@@ -12,13 +12,13 @@ env.Command(
 env.Command(
     target=["abyss.dat"],
     source=["books/abyss.txt", "countwords.py"],
-	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+    action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
 )
 
 env.Command(
     target=["last.dat"],
     source=["books/last.txt", "countwords.py"],
-	action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
+    action=["python countwords.py ${SOURCES[0]} ${TARGET}"],
 )
 
 env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])

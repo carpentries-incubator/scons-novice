@@ -12,7 +12,7 @@ env.Command(
 env.Command(
     target=["abyss.dat"],
     source=["books/abyss.txt"],
-	action=["python countwords.py books/abyss.txt abyss.dat"],
+    action=["python countwords.py books/abyss.txt abyss.dat"],
 )
 
 env.Alias("dats", ["isles.dat", "abyss.dat"])

@@ -5,7 +5,10 @@ COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
 TEXT_FILES = Glob("books/*.txt")
-DATA_FILES = [pathlib.Path(str(text_file)).with_suffix(".dat").name for text_file in TEXT_FILES]
+DATA_FILES = [
+    pathlib.Path(str(text_file)).with_suffix(".dat").name
+    for text_file in TEXT_FILES
+]
 
 AddOption(
     "--variables",
