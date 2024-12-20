@@ -4,13 +4,13 @@ import pathlib
 from SCons.Node.Alias import default_ans
 from SCons.Script import DEFAULT_TARGETS
 
-from scons_less_configuration import *
+from scons_lesson_configuration import *
 
 AddOption(
     "--variables",
     action="store_true",
     default=False,
-    help="Print the text files returned by Glob and exit (default: %default)",
+    help="Print the files returned by Glob and exit (default: '%default')",
 )
 if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]
