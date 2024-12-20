@@ -20,7 +20,9 @@ if GetOption("variables"):
 
 env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
+
 env.CountWords(DATA_FILES)
+
 env.Alias("dats", DATA_FILES)
 
 env.Command(
