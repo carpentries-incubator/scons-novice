@@ -37,7 +37,7 @@ $ R -e 'sandpaper::build_lesson(preview = FALSE)'
 [![Create a Slack Account with us](https://img.shields.io/badge/Create_Slack_Account-The_Carpentries-071159.svg)](https://slack-invite.carpentries.org/)
 [![Slack Status](https://img.shields.io/badge/Slack_Channel-swc--make-E01563.svg)](https://carpentries.slack.com/messages/C9X2YCPT5)
 
-# scons-novice
+# make-novice
 
 An introduction to Make using reproducible papers as a motivating example.
 Please see [https://swcarpentry.github.io/scons-novice/](https://swcarpentry.github.io/scons-novice/) for a rendered version
