@@ -15,7 +15,7 @@ PLOT_FILES = [
     pathlib.Path(data_file).with_suffix(".png").name
     for data_file in DATA_FILES
 ]
-CODE_FILES = Glob("*.py")
+CODE_FILES = SCons.Script.Glob("*.py")
 
 
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
