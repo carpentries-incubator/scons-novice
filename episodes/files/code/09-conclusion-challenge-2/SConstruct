@@ -20,6 +20,7 @@ if GetOption("variables"):
 
 env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
+env.AddMethod(plot_counts, "PlotCounts")
 
 env.CountWords(DATA_FILES)
 
@@ -42,18 +43,14 @@ help_content = return_help_content(
     help_content,
 )
 
-for plot_file, data_file in zip(PLOT_FILES, DATA_FILES):
-    plot = env.Command(
-        target=[plot_file],
-        source=[PNG_SOURCE, data_file],
-        action=["${language} ${SOURCES[0]} ${SOURCES[1]} ${TARGET}"],
-        language=LANGUAGE,
-    )
-    help_content = return_help_content(
-        plot,
-        f"Plot {data_file} analysis",
-        help_content,
-    )
+env.PlotCounts(PLOT_FILES)
+
+plots = env.Alias("plots", PLOT_FILES)
+help_content = return_help_content(
+    plots,
+    f"Plot word counts.",
+    help_content,
+)
 
 archive = env.Tar(
     target=["zipf_analysis.tar.gz"],

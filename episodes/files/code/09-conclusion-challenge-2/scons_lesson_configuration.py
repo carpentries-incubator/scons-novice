@@ -12,7 +12,7 @@ DATA_FILES = [
     pathlib.Path(str(text_file)).with_suffix(".dat").name
     for text_file in TEXT_FILES
 ]
-PNG_SOURCE = "plotcounts.py"
+PLOT_SOURCE = "plotcounts.py"
 PLOT_FILES = [
     pathlib.Path(data_file).with_suffix(".png").name
     for data_file in DATA_FILES
@@ -40,6 +40,31 @@ def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
                 action=["${language} ${count_source} ${SOURCES[0]} ${TARGET}"],
                 language=language,
                 count_source=count_source,
+            )
+        )
+    return target_nodes
+
+
+def plot_counts(env, plot_files, language=LANGUAGE, plot_source=PLOT_SOURCE):
+    """Pseudo-builder to produce `.png` targets from the `plotcounts.py` script
+
+    Assumes that the source data files are found in `{plot_file}.dat`
+
+    :param env: SCons construction environment. Do not provide when using this
+        function with the `env.AddMethod` and `env.CountWords` access style.
+    :param plot_files: List of string names of the plot files to create.
+    """
+    target_nodes = []
+    for plot_file in plot_files:
+        plot_path = pathlib.Path(plot_file)
+        data_file = plot_path.with_suffix(".dat")
+        target_nodes.extend(
+            env.Command(
+                target=[plot_file],
+                source=[data_file, plot_source],
+                action=["${language} ${plot_source} ${SOURCES[0]} ${TARGET}"],
+                language=language,
+                plot_source=plot_source,
             )
         )
     return target_nodes
