@@ -336,7 +336,7 @@ env.Command(
 
 But it would be helpful to clarify the unique role of the `testzipf.py` as a Python script. We can
 clarify the intended roles for different source files by indexing the sources in our action. SCons
-allows for Python-ic slicing when indexing special substitution variables.
+allows for Pythonic slicing when indexing special substitution variables.
 
 ```python
 env.Command(
@@ -351,7 +351,7 @@ env.Command(
 ## Index the `.dat` task actions
 
 Index the sources for `.dat` task actions without changing the source file order. Remember that
-SCons allows Python-ic slicing when indexing special substitution variables.
+SCons allows Pythonic slicing when indexing special substitution variables.
 
 :::::::::::::::  solution
 

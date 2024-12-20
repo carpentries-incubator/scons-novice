@@ -210,7 +210,7 @@ we add additional dependencies (as we will soon do) then we don't want
 these being passed as input files to `countwords.py` as it expects only
 one input file to be named when it is invoked.
 
-SCons provides allows Python-ic, zero-based indexing of special substitution variables
+SCons provides allows Pythonic, zero-based indexing of special substitution variables
 ``${SOURCES}`` and ``${TARGETS}`` for this use case. For example, `${SOURCES[0]}` means 'the first
 dependency of the current task'.
 
