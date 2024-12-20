@@ -21,7 +21,7 @@ Despite our efforts, our SConstruct still has repeated content, i.e.  the progra
 scripts, `python`. Additionally, if we renamed our scripts we'd have to hunt through our SConstruct
 file in multiple places.
 
-We can introduce a Python [variables](../learners/reference.md#variable) after the import statements
+We can introduce Python [variables](../learners/reference.md#variable) after the import statements
 in `SConstruct` to hold our script name:
 
 ```python
@@ -30,7 +30,8 @@ COUNT_SOURCE = "countwords.py"
 
 This is a variable [assignment](../learners/reference.md#assignment) -
 `COUNT_SOURCE` is assigned the value `"countwords.py"` and behaves like (actually is) normal Python
-variable assignment.
+variable assignment. The all capitals naming convention indicates that the variable is intended for
+use as a setting or constant value.
 
 We can do the same thing with the interpreter language used to run the script:
 
@@ -88,8 +89,6 @@ us create `scons_lesson_configuration.py` from the content below.
 
 ```python
 import pathlib
-
-import SCons
 
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
