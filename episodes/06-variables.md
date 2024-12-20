@@ -128,8 +128,9 @@ from scons_lesson_configuration import *
 ```
 
 Note that the above import statement merges the module namespace into the SConstruct file namespace.
-We must be careful to avoid re-using variable and function names, which would overwrite the names
-provided by our module.
+We must be careful to avoid re-defining variable and function names provided by
+`scons_lesson_configuration.py` in our `SConstruct` file, which would overwrite the names provided
+by our module and lead to unexpected behavior.
 
 We can re-run SCons to see that everything still works:
 
@@ -153,7 +154,7 @@ contain all of our work so far.
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
 - Define variables by assigning values to names with Python syntax
-- Reference variables using SCons substitution syntax `${...}`.
+- Reference variables in action strings using SCons substitution syntax `${...}`.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
