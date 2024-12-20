@@ -49,9 +49,7 @@ Add new rules, update existing rules, and add new variables to:
 and this [Python module](files/code/09-conclusion-challenge-1/scons_lesson_configuration.py)
 contain a simple solution to this challenge.
 
-A more elegant solution would be to re-write the `count_words` pseudo-builder as a generic, two-file
-Python script pseudo-builder that accepts a target file, source file, and Python script to assemble into an
-action. There's a hint for such a conversion found in the implemented action string.
+Can you think of a way to reduce duplication in `count_words` and `plot_counts` functions?
 
 To remove all targets, use the SCons special `.` target and the `--clean` flag.
 
