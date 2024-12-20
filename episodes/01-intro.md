@@ -278,16 +278,22 @@ new files, for example:
 There are now many build tools available, for example [GNU Make][gnu-make], [Apache
 ANT][apache-ant], [doit], and [nmake] for Windows.  Which is best for you depends on your
 requirements, intended usage, and operating system. However, they all share the same fundamental
-concepts as SCons.
+concepts.
 
 Also, you might come across build generation scripts e.g. [GNU
 Autoconf][autoconf] and [CMake][cmake]. Those tools do not run the
 pipelines directly, but rather generate files for use with the build
 tools.
 
+As a Python based build tool, SCons is available on Windows, MacOS, and Linux. It is distributed
+with the `pip` and `conda` package managers, so it can be installed in the same Python scientific
+computing environments popular with computational science and engineering communities. SCons also
+uses Python as the configuration language, so the configuration files will feel familiar to many
+students.
+
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Why Use Make if it is Almost 40 Years Old?
+## Why mention Make if it is Almost 40 Years Old?
 
 Make development was started by Stuart Feldman in 1977 as a Bell
 Labs summer intern. Since then it has been undergoing an active
@@ -299,19 +305,14 @@ Researchers working with legacy codes in C or FORTRAN, which are
 very common in high-performance computing, will, very likely
 encounter Make.
 
-Researchers can use Make for implementing reproducible
-research workflows, automating data analysis and visualisation
-(using Python or R) and combining tables and plots with text to
-produce reports and papers for publication.
-
-Make's fundamental concepts are common across build tools.
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
+Make introduced fundamental concepts that are common across most build tools.
 
 [GNU Make][gnu-make] is a free-libre, fast, [well-documented][gnu-make-documentation],
 and very popular Make implementation. From now on, we will focus on it, and when we say
 Make, we mean GNU Make.
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
 
 [zipfs-law]: https://en.wikipedia.org/wiki/Zipf%27s_law
 [apache-ant]: https://ant.apache.org/
