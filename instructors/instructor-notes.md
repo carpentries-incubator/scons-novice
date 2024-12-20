@@ -2,12 +2,21 @@
 title: Instructor Notes
 ---
 
-Make is a popular tool for automating the building of software -
+SCons is an open-source, Python-based, software construction tool. Because it is written in pure
+Python, it can be distributed on Windows, MacOS, and Linux with the `pip` and `conda` package
+managers alongside other popular Python scientific computing packages. SCons also uses Python as the
+configuration language, which makes it an ideal choice for extension into computational science and
+engineering workflows.
+
+Make will also be mentioned and referenced in the lesson plans.
+Make is another popular tool for automating the building of software -
 compiling source code into executable programs.
 
 Though Make is nearly 40 years old, and there are many other build
 tools available, its fundamental concepts are common across build
 tools.
+Its widespread use means anyone learning about build systems is likely to encounter Make and the
+underlying concepts of build systems discussed in the language of the Make documentation.
 
 Today, researchers working with legacy codes in C or FORTRAN, which
 are very common in high-performance computing, will, very likely
