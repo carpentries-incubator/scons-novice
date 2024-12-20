@@ -10,7 +10,7 @@ exercises: 10
   actions.
 - Write a simple SConstruct file.
 - Run SCons from the shell.
-- Explain when and why to mark targets as `.PHONY`.
+- Explain how to create aliases for collections of targets.
 - Explain constraints on dependencies.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
