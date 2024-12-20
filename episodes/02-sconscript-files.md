@@ -26,7 +26,6 @@ Create a file, called `SConstruct`, with the following content:
 ```python
 import os
 
-
 env = Environment(os.environ.copy())
 
 # Count words.
@@ -474,7 +473,6 @@ Our `SConstruct` now looks like this:
 
 ```python
 import os
-
 
 env = Environment(ENV=os.environ.copy())
 

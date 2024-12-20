@@ -23,7 +23,6 @@ this:
 ```python
 import os
 
-
 env = Environment(ENV=os.environ.copy())
 
 env.Command(
