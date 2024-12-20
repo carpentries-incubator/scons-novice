@@ -115,7 +115,7 @@ SCons tracks the source list as part of the task signature. Adding a new source 
 of the targets. Now if we edit the `countwords.py` file, the targets will re-build again.
 
 ```bash
-# echo "" >> countwords.py
+$ echo "" >> countwords.py
 $ scons dats
 ```
 
@@ -169,7 +169,7 @@ scons: done building targets.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-The following figure shows a graph of the dependencies, that are
+The following figure shows a graph of the dependencies that are
 involved in building the target `results.txt`. Notice the recently
 added dependencies `countwords.py` and `testzipf.py`.  This is how the
 SConstruct should look after completing the rest of the exercises
@@ -228,9 +228,9 @@ out-of-date.
 
 Both behaviors are examples of the power of a build manager: updating a
 subset of the files in the pipeline triggers rerunning the appropriate
-downstream steps. The added benefit to stopping a pipeline early if intermediate files' contents
-have not changed is a desirable of SCons for computational science and engineering, where some tasks
-may require hours to days to complete.
+downstream steps. The additional SCons behavior of stopping a pipeline early when intermediate file
+content has not changed is desirable for computational science and engineering workflows, where
+some tasks may require hours to days to complete.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
@@ -282,7 +282,7 @@ env.Command(
 )
 ```
 
-`testzipf.py` becomes a part of `${SOURCES}`, thus the command becomes
+`testzipf.py` becomes a part of `${SOURCES}`, thus the post-substitution command becomes
 
 ```bash
 python testzipf.py abyss.dat isles.dat last.dat testzipf.py > results.txt
