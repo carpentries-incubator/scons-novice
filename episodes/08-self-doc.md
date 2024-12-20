@@ -62,29 +62,98 @@ But every time we add or remove a task, or change the default target list, we wo
 the help message string manually. It would be better if we
 could construct the list of default targets and aliases from the configured tasks. We can use the
 SCons `default_ans` and `DEFAULT_TARGETS` variables. First update the imports at the top of the
-`SConstruct` file
+`scons_lesson_configuration.py` file
 
 ```python
-import os
 import pathlib
 
-from SCons.Node.Alias import default_ans
+import SCons.Script
 from SCons.Script import DEFAULT_TARGETS
-
-from scons_lesson_configuration import *
+from SCons.Node.Alias import default_ans
 ```
 
-Then add the help message construction at the bottom of the `SConstruct` file. It is important that
-the `Help` call comes *after* all default targets are assigned and all aliases are created.
+Then add new help message construction functions at the bottom of the
+`scons_lesson_configuration.py` file.
 
 ```python
-help_message = "\nDefault Targets:\n"
-for target in DEFAULT_TARGETS:
-    help_message += f"    {str(target)}\n"
-help_message += "\nTarget Aliases:\n"
-for alias in default_ans:
-    help_message += f"    {alias}\n"
-env.Help(help_message, append=True, keep_local=True)
+def return_help_content(nodes, message="", help_content=dict()):
+    """Return a dictionary of {node: message} string pairs
+
+    Helpful in constructing help content for :meth:`project_help`. Will not
+    overwrite existing keys.
+
+    :param nodes: SCons node objects, e.g. targets and aliases
+    :param message: Help message to assign to every node in nodes
+
+    :returns: Dictionary of {node: message} string pairs
+    :rtype: dict
+    """
+    new_help_content = {str(node): message for node in nodes}
+    new_help_content.update(help_content)
+    return new_help_content
+
+
+def project_help(help_content=dict()):
+    """Append the SCons help message with default targets and aliases
+
+    Must come *after* all default targets and aliases are defined.
+
+    :param dict help_content: Optional dictionary with target help messages
+        ``{target: help}``
+    """
+    def add_content(nodes, help_content=help_content, message=""):
+        """Append a help message for all nodes using provided help content if
+        available.
+
+        :param nodes: SCons node objects, e.g. targets and aliases
+
+        :returns: appended help message
+        :rtype: str
+        """
+        keys = [str(node) for node in nodes]
+        for key in keys:
+            if key in help_content.keys():
+                message += f"    {key}: {help_content[key]}\n"
+            else:
+                message += f"    {key}\n"
+        return message
+
+    defaults_message = add_content(
+        DEFAULT_TARGETS, message="\nDefault Targets:\n"
+    )
+    alias_message = add_content(default_ans, message="\nTarget Aliases:\n")
+    SCons.Script.Help(
+        defaults_message + alias_message, append=True, keep_local=True
+    )
+```
+
+Finally, update the bottom of the `SConstruct` file with the new function calls. It is important
+that the `project_help` call comes *after* all default targets are assigned and all aliases are
+created.
+
+```python
+dats = env.Alias("dats", DATA_FILES)
+help_content = return_help_content(
+    dats,
+    "Count words in text files.",
+)
+
+results = env.Command(
+    target=["results.txt"],
+    source=[ZIPF_SOURCE] + DATA_FILES,
+    action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
+    language=LANGUAGE,
+    zipf_source=ZIPF_SOURCE,
+)
+help_content = return_help_content(
+    results,
+    "Generate Zipf summary table.",
+    help_content,
+)
+
+env.Default(["results.txt"])
+
+project_help(help_content)
 ```
 
 If we now run
@@ -99,13 +168,13 @@ we get some SCons status messages, our help message, and the hint for the full S
 scons: Reading SConscript files ...
 scons: done reading SConscript files.
 Local Options:
-  --variables  Print the text files returned by Glob and exit (default: False)
+  --variables  Print the files returned by Glob and exit (default: 'False')
 
 Default Targets:
-    results.txt
+    results.txt: Generate Zipf summary table.
 
 Target Aliases:
-    dats
+    dats: Count words in text files.
 
 Use scons -H for help about SCons built-in command-line options.
 ```

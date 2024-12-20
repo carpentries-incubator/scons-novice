@@ -1,6 +1,8 @@
 import pathlib
 
 import SCons.Script
+from SCons.Script import DEFAULT_TARGETS
+from SCons.Node.Alias import default_ans
 
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
@@ -40,3 +42,54 @@ def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
             )
         )
     return target_nodes
+
+
+def return_help_content(nodes, message="", help_content=dict()):
+    """Return a dictionary of {node: message} string pairs
+
+    Helpful in constructing help content for :meth:`project_help`. Will not
+    overwrite existing keys.
+
+    :param nodes: SCons node objects, e.g. targets and aliases
+    :param message: Help message to assign to every node in nodes
+
+    :returns: Dictionary of {node: message} string pairs
+    :rtype: dict
+    """
+    new_help_content = {str(node): message for node in nodes}
+    new_help_content.update(help_content)
+    return new_help_content
+
+
+def project_help(help_content=dict()):
+    """Append the SCons help message with default targets and aliases
+
+    Must come *after* all default targets and aliases are defined.
+
+    :param dict help_content: Optional dictionary with target help messages
+        ``{target: help}``
+    """
+    def add_content(nodes, help_content=help_content, message=""):
+        """Append a help message for all nodes using provided help content if
+        available.
+
+        :param nodes: SCons node objects, e.g. targets and aliases
+
+        :returns: appended help message
+        :rtype: str
+        """
+        keys = [str(node) for node in nodes]
+        for key in keys:
+            if key in help_content.keys():
+                message += f"    {key}: {help_content[key]}\n"
+            else:
+                message += f"    {key}\n"
+        return message
+
+    defaults_message = add_content(
+        DEFAULT_TARGETS, message="\nDefault Targets:\n"
+    )
+    alias_message = add_content(default_ans, message="\nTarget Aliases:\n")
+    SCons.Script.Help(
+        defaults_message + alias_message, append=True, keep_local=True
+    )
