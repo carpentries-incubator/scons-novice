@@ -1,8 +1,8 @@
 # scons-novice
 
 Adapted from
-[https://swcarpentry.github.io/scons-novice/](https://swcarpentry.github.io/scons-novice/) source
-repository at commit [ba7c2dd](https://github.com/swcarpentry/scons-novice)
+[https://swcarpentry.github.io/make-novice/](https://swcarpentry.github.io/make-novice/) source
+repository at commit [ba7c2dd](https://github.com/swcarpentry/make-novice)
 
 The following instructions are adopted from https://carpentries.github.io/workbench/
 
