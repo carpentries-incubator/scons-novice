@@ -94,7 +94,6 @@ import SCons
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
-TEXT_FILES = Glob("books/*.txt")
 
 
 def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
@@ -117,10 +116,6 @@ def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
     )
     return target_nodes
 ```
-
-Because our new Python module is no longer part of the SConstruct file, it does not have direct
-access to the special SCons namespace. We need to import SCons like a Python package to use the
-`Glob` function.
 
 An added benefit to moving our custom functions into a file with the `.py` extension is that we can
 use automated documentation tools, such as [Sphinx](https://www.sphinx-doc.org/en/master/), to build
