@@ -1,11 +1,8 @@
 import pathlib
 
-import SCons.Script
-
 COUNT_SOURCE = "countwords.py"
 LANGUAGE = "python"
 ZIPF_SOURCE = "testzipf.py"
-TEXT_FILES = SCons.Script.Glob("books/*.txt")
 
 
 def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
