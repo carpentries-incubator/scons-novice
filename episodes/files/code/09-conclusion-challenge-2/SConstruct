@@ -4,66 +4,28 @@ import pathlib
 from SCons.Node.Alias import default_ans
 from SCons.Script import DEFAULT_TARGETS
 
-COUNT_SOURCE = "countwords.py"
-LANGUAGE = "python"
-ZIPF_SOURCE = "testzipf.py"
-TEXT_FILES = Glob("books/*.txt")
-DATA_FILES = [
-    pathlib.Path(str(text_file)).with_suffix(".dat").name
-    for text_file in TEXT_FILES
-]
-PNG_SOURCE = "plotcounts.py"
-PLOT_FILES = [
-    pathlib.Path(data_file).with_suffix(".png").name
-    for data_file in DATA_FILES
-]
-CODE_FILES = Glob("*.py")
+from scons_lesson_configuration import *
 
 AddOption(
     "--variables",
     action="store_true",
     default=False,
-    help="Print the text files returned by Glob and exit (default: %default)",
+    help="Print the files returned by Glob and exit (default: '%default')",
 )
 if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]
-    code_file_strings = [str(node) for node in CODE_FILES]
     print(f"TEXT_FILES: {text_file_strings}")
     print(f"DATA_FILES: {DATA_FILES}")
     print(f"PLOT_FILES: {PLOT_FILES}")
+    code_file_strings = [str(node) for node in CODE_FILES]
     print(f"CODE_FILES: {code_file_strings}")
     Exit(0)
 
 env = Environment(ENV=os.environ.copy())
-
-
-def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
-    """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
-
-    Assumes that the source text files are found in `books/{data_file}.txt`
-
-    :param env: SCons construction environment. Do not provide when using this
-        function with the `env.AddMethod` and `env.CountWords` access style.
-    :param data_files: List of string names of the data files to create.
-    """
-    target_nodes = []
-    for data_file in data_files:
-        data_path = pathlib.Path(data_file)
-        text_file = pathlib.Path("books") / data_path.with_suffix(".txt")
-        target_nodes.extend(
-            env.Command(
-                target=[data_file],
-                source=[text_file, count_source],
-                action=["${language} ${count_source} ${SOURCES[0]} ${TARGET}"],
-                language=language,
-                count_source=count_source,
-            )
-        )
-    return target_nodes
-
-
 env.AddMethod(count_words, "CountWords")
+
 env.CountWords(DATA_FILES)
+
 env.Alias("dats", DATA_FILES)
 
 env.Command(

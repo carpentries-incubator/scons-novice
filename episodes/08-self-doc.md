@@ -65,8 +65,13 @@ SCons `default_ans` and `DEFAULT_TARGETS` variables. First update the imports at
 `SConstruct` file
 
 ```python
+import os
+import pathlib
+
 from SCons.Node.Alias import default_ans
 from SCons.Script import DEFAULT_TARGETS
+
+from scons_lesson_configuration import *
 ```
 
 Then add the help message construction at the bottom of the `SConstruct` file. It is important that
@@ -113,7 +118,8 @@ our help messages.
 ## Where We Are
 
 [This SConstruct file](files/code/08-self-doc/SConstruct)
-contains all of our work so far.
+and this [Python module](files/code/08-self-doc/scons_lesson_configuration.py)
+contain all of our work so far.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::

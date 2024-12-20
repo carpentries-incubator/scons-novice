@@ -18,38 +18,13 @@ exercises: 5
 
 At this point, we have the following SConstruct file:
 
-```make
+```python
 import os
 import pathlib
 
-COUNT_SOURCE = "countwords.py"
-LANGUAGE = "python"
-ZIPF_SOURCE = "testzipf.py"
+from scons_lesson_configuration import *
 
 env = Environment(ENV=os.environ.copy())
-
-
-def count_words(env, data_file, language=LANGUAGE, count_source=COUNT_SOURCE):
-    """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
-
-    Assumes that the source text file is found in `books/{data_file}.txt`
-
-    :param env: SCons construction environment. Do not provide when using this
-        function with the `env.AddMethod` and `env.CountWords` access style.
-    :param data_file: String name of the data file to create.
-    """
-    data_path = pathlib.Path(data_file)
-    text_file = pathlib.Path("books") / data_path.with_suffix(".txt")
-    target_nodes = env.Command(
-        target=[data_file],
-        source=[text_file, count_source],
-        action=["${language} ${count_source} ${SOURCES[0]} ${TARGET}"],
-        language=language,
-        count_source=count_source,
-    )
-    return target_nodes
-
-
 env.AddMethod(count_words, "CountWords")
 
 env.CountWords("isles.dat")
@@ -77,16 +52,27 @@ Python and SCons have many [functions](../learners/reference.md#function) which 
 to write more complex tasks. One example is `Glob`. `Glob` gets a
 list of files matching some pattern, which we can then save in a
 variable. So, for example, we can get a list of all our text files
-(files ending in `.txt`) and save these in a variable by adding this at
-the beginning of our SConstruct file:
+(files ending in `.txt`) and save these in a variable by updating
+the beginning of our `scons_lesson_configuration.py` file:
 
 ```python
-TEXT_FILES = Glob("books/*.txt")
+import pathlib
+
+import SCons.Script
+
+COUNT_SOURCE = "countwords.py"
+LANGUAGE = "python"
+ZIPF_SOURCE = "testzipf.py"
+TEXT_FILES = SCons.Script.Glob("books/*.txt")
 ```
+
+Because our new Python module is no longer part of the SConstruct file, it does not have direct
+access to the special SCons namespace. We need to import SCons like a Python package to use the
+`Glob` function.
 
 We can add a [custom command-line
 option](https://scons.org/doc/production/HTML/scons-user.html#sect-AddOption) `--variables` to
-print the `TEXT_FILES` value and exit configuration prior to building using Python
+our SConstruct file to print the `TEXT_FILES` value and exit configuration prior to building using Python
 [f-string](https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals) syntax:
 
 ```python
@@ -133,7 +119,8 @@ Note how `sierra.txt` is now included too. There are some progress messages miss
 due to the early `Exit`. The configuration phase is exited immediately and there is no build phase.
 
 We can construct a list of data files with a list comprehension that performs path manipulation of
-the text files list. We will use the `pathlib` module again for OS-agnostic path separators.
+the text files list to the `scons_lesson_configuration.py` module. We will use the `pathlib` module
+again for OS-agnostic path separators.
 
 ```python
 DATA_FILES = [
@@ -142,9 +129,9 @@ DATA_FILES = [
 ]
 ```
 
-We can extend `variables` to show the value of `DATA_FILES` too. Recovering the SCons node object
-into a string, then a `pathlib.Path`, and finally trimming the parent directory returns a list of
-strings, so we can print the list directly.
+We can extend the `--variables` option in SConstruct file to show the value of `DATA_FILES` too.
+Recovering the SCons node objects into a string, then a `pathlib.Path`, and finally trimming the
+parent directory returns a list of strings, so we can print the list directly.
 
 ```python
 if GetOption("variables"):
@@ -168,9 +155,10 @@ TEXT_FILES: ['books/abyss.txt', 'books/isles.txt', 'books/last.txt', 'books/sier
 DATA_FILES: ['abyss.dat', 'isles.dat', 'last.dat', 'sierra.dat']
 ```
 
-Finally, we can update our `count_words` function to accept a list of data files and reduce our
-`CountWords` function calls to a single instance. We will have to collect the target nodes returned
-by `Command` and compile the full list of target nodes to return from our psuedo-builder.
+Finally, we can update our `count_words` function in `scons_lesson_configuration.py` to accept a
+list of data files and reduce our `CountWords` function calls to a single instance in `SConstruct`.
+We will have to collect the target nodes returned by `Command` and compile the full list of target
+nodes to return from our psuedo-builder.
 
 ```python
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
@@ -196,10 +184,14 @@ def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
             )
         )
     return target_nodes
+```
 
-
+```python
+env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
+
 env.CountWords(DATA_FILES)
+
 env.Alias("dats", DATA_FILES)
 ```
 
@@ -275,26 +267,21 @@ sierra	4242	2469	1.72
 So the range of the ratios of occurrences of the two most frequent
 words in our books is indeed around 2, as predicted by Zipf's Law,
 i.e., the most frequently-occurring word occurs approximately twice as
-often as the second most frequent word.  Here is our final SConstruct file:
+often as the second most frequent word.
+
+Here is our final SConstruct file:
 
 ```python
 import os
 import pathlib
 
-COUNT_SOURCE = "countwords.py"
-LANGUAGE = "python"
-ZIPF_SOURCE = "testzipf.py"
-TEXT_FILES = Glob("books/*.txt")
-DATA_FILES = [
-    pathlib.Path(str(text_file)).with_suffix(".dat").name
-    for text_file in TEXT_FILES
-]
+from scons_lesson_configuration import *
 
 AddOption(
     "--variables",
     action="store_true",
     default=False,
-    help="Print the text files returned by Glob and exit (default: %default)",
+    help="Print the files returned by Glob and exit (default: '%default')",
 )
 if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]
@@ -303,6 +290,38 @@ if GetOption("variables"):
     Exit(0)
 
 env = Environment(ENV=os.environ.copy())
+env.AddMethod(count_words, "CountWords")
+
+env.CountWords(DATA_FILES)
+
+env.Alias("dats", DATA_FILES)
+
+env.Command(
+    target=["results.txt"],
+    source=[ZIPF_SOURCE] + DATA_FILES,
+    action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
+    language=LANGUAGE,
+    zipf_source=ZIPF_SOURCE,
+)
+
+env.Default(["results.txt"])
+```
+
+and the supporting `scons_lesson_configuration.py` module:
+
+```python
+import pathlib
+
+import SCons.Script
+
+COUNT_SOURCE = "countwords.py"
+LANGUAGE = "python"
+ZIPF_SOURCE = "testzipf.py"
+TEXT_FILES = SCons.Script.Glob("books/*.txt")
+DATA_FILES = [
+    pathlib.Path(str(text_file)).with_suffix(".dat").name
+    for text_file in TEXT_FILES
+]
 
 
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
@@ -328,21 +347,6 @@ def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
             )
         )
     return target_nodes
-
-
-env.AddMethod(count_words, "CountWords")
-env.CountWords(DATA_FILES)
-env.Alias("dats", DATA_FILES)
-
-env.Command(
-    target=["results.txt"],
-    source=[ZIPF_SOURCE] + DATA_FILES,
-    action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
-    language=LANGUAGE,
-    zipf_source=ZIPF_SOURCE,
-)
-
-env.Default(["results.txt"])
 ```
 
 The following figure shows the dependencies embodied within our SConstruct file,
@@ -356,7 +360,8 @@ now we have introduced our function:
 ## Where We Are
 
 [This SConstruct file](files/code/07-functions/SConstruct)
-contains all of our work so far.
+and this [Python module](files/code/07-functions/scons_lesson_configuration.py)
+contain all of our work so far.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::

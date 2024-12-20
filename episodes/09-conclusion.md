@@ -46,7 +46,8 @@ Add new rules, update existing rules, and add new variables to:
 ## Solution
 
 [This SConstruct file](files/code/09-conclusion-challenge-1/SConstruct)
-contains a simple solution to this challenge.
+and this [Python module](files/code/09-conclusion-challenge-1/scons_lesson_configuration.py)
+contain a simple solution to this challenge.
 
 A more elegant solution would be to re-write the `count_words` pseudo-builder as a generic, two-file
 Python script pseudo-builder that accepts a target file, source file, and Python script to assemble into an
@@ -93,7 +94,8 @@ rules and add new variables to:
 ## Solution
 
 [This SConstruct file](files/code/09-conclusion-challenge-2/SConstruct)
-contains a solution to this challenge.
+and this [Python module](files/code/09-conclusion-challenge-2/scons_lesson_configuration.py)
+contain a simple solution to this challenge.
 
 
 :::::::::::::::::::::::::
