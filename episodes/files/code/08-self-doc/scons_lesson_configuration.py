@@ -46,7 +46,9 @@ def return_help_content(nodes, message="", help_content=dict()):
     overwrite existing keys.
 
     :param nodes: SCons node objects, e.g. targets and aliases
-    :param message: Help message to assign to every node in nodes
+    :param str message: Help message to assign to every node in nodes
+    :param dict help_content: Optional dictionary with target help messages
+        ``{target: help}``
 
     :returns: Dictionary of {node: message} string pairs
     :rtype: dict
@@ -64,11 +66,14 @@ def project_help(help_content=dict()):
     :param dict help_content: Optional dictionary with target help messages
         ``{target: help}``
     """
-    def add_content(nodes, help_content=help_content, message=""):
+    def add_content(nodes, message="", help_content=help_content):
         """Append a help message for all nodes using provided help content if
         available.
 
         :param nodes: SCons node objects, e.g. targets and aliases
+        :param str message: Help message to assign to every node in nodes
+        :param dict help_content: Optional dictionary with target help messages
+            ``{target: help}``
 
         :returns: appended help message
         :rtype: str
