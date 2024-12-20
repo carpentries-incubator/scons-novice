@@ -1,11 +1,11 @@
 import os
 import pathlib
 
-env = Environment(ENV=os.environ.copy())
-
 count_words_builder = env.Builder(
     action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
 )
+
+env = Environment(ENV=os.environ.copy())
 env.Append(BUILDERS={"CountWords": count_words_builder})
 
 env.CountWords(

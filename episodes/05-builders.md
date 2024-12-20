@@ -6,7 +6,7 @@ exercises: 0
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Write SCons builders.
+- Write SCons builders and pseudo-builders
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -31,6 +31,7 @@ After creating the custom builder, we need to add it to the construction environ
 available for task definitions.
 
 ```python
+env = Environment(ENV=os.environ.copy())
 env.Append(BUILDERS={"CountWords": count_words_builder})
 ```
 
@@ -74,20 +75,20 @@ python countwords.py books/last.txt last.dat
 scons: done building targets.
 ```
 
-We can further simplify the task definition by moving the text file handling with a Pseudo-builder.
-Pseudo-builders behave like builders, but allow flexibility in task construction handling with
+We can further simplify the task definition by moving the text file handling inside a pseudo-builder
+function. Pseudo-builders behave like builders, but allow flexibility in task construction through
 user-defined arguments. We will use the `pathlib` module to help us construct OS-agnostic paths and
-perform path manipulation. At the top of your `SConstruct` file, update the imports as below.
+perform path manipulation.
+
+At the top of your `SConstruct` file, update the imports as below. Then define a new `count_words`
+pseudo-builder function after the imports to replace the `count_word_builder` and add it to the
+construction environment.
 
 ```python
 import os
 import pathlib
-```
 
-Now define a new `count_words` pseudo-builder function to replace the `count_word_builder` and add
-it to the construction environment.
 
-```python
 def count_words(env, data_file):
     """Pseudo-builder to run the `countwords.py` script and produce `.dat` target
 
@@ -107,6 +108,7 @@ def count_words(env, data_file):
     return target_nodes
 
 
+env = Environment(ENV=os.environ.copy())
 env.AddMethod("CountWords", count_words)
 ```
 
