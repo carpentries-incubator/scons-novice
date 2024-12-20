@@ -304,10 +304,10 @@ scons: done reading SConscript files.
 scons: Building targets ...
 python testzipf.py isles.dat abyss.dat last.dat testzipf.py > results.txt
 Traceback (most recent call last):
-  File "/projects/kbrindley/repos/scons-novice/scons-lesson/testzipf.py", line 19, in <module>
+  File "/home/roppenheimer/scons-lesson/testzipf.py", line 19, in <module>
     counts = load_word_counts(input_file)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/projects/kbrindley/repos/scons-novice/scons-lesson/countwords.py", line 39, in load_word_counts
+  File "/home/roppenheimer/scons-lesson/countwords.py", line 39, in load_word_counts
     counts.append((fields[0], int(fields[1]), float(fields[2])))
                               ^^^^^^^^^^^^^^
 ValueError: invalid literal for int() with base 10: 'countwords'
