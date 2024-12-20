@@ -118,7 +118,8 @@ our help messages.
 ## Where We Are
 
 [This SConstruct file](files/code/08-self-doc/SConstruct)
-contains all of our work so far.
+and this [Python module](files/code/08-self-doc/scons_lesson_configuration.py)
+contain all of our work so far.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
