@@ -57,7 +57,7 @@ for plot_file, data_file in zip(PLOT_FILES, DATA_FILES):
 
 archive = env.Tar(
     target=["zipf_analysis.tar.gz"],
-    source=["SConstruct"] + CODE_FILES + PLOT_FILES + DATA_FILES + TEXT_FILES,
+    source=["SConstruct"] + results + CODE_FILES + PLOT_FILES + DATA_FILES + TEXT_FILES,
     TARFLAGS="-c -z",
 )
 help_content = return_help_content(
