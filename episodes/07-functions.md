@@ -129,9 +129,10 @@ DATA_FILES = [
 ]
 ```
 
-We can extend the `--variables` option in SConstruct file to show the value of `DATA_FILES` too.
-Recovering the SCons node objects into a string, then a `pathlib.Path`, and finally trimming the
-parent directory returns a list of strings, so we can print the list directly.
+We can extend the `--variables` option in SConstruct file to show the value of `DATA_FILES` too.  We
+cast the SCons node objects into a string, then create a `pathlib.Path` object, and finally trim the
+parent directory to get our data file name. These operations return a list of strings, so we can
+`print` the list directly.
 
 ```python
 if GetOption("variables"):
