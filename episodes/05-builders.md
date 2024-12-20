@@ -84,7 +84,7 @@ import os
 import pathlib
 ```
 
-Now define a new `count_words` pseudo-builder function to replace the `count_word_builders` and add
+Now define a new `count_words` pseudo-builder function to replace the `count_word_builder` and add
 it to the construction environment.
 
 ```python
