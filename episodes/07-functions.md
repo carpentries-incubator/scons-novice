@@ -187,8 +187,11 @@ def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
 ```
 
 ```python
+env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
+
 env.CountWords(DATA_FILES)
+
 env.Alias("dats", DATA_FILES)
 ```
 
@@ -290,6 +293,7 @@ env = Environment(ENV=os.environ.copy())
 env.AddMethod(count_words, "CountWords")
 
 env.CountWords(DATA_FILES)
+
 env.Alias("dats", DATA_FILES)
 
 env.Command(
