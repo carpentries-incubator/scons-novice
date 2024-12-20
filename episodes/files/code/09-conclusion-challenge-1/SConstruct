@@ -1,9 +1,6 @@
 import os
 import pathlib
 
-from SCons.Node.Alias import default_ans
-from SCons.Script import DEFAULT_TARGETS
-
 from scons_lesson_configuration import *
 
 AddOption(
@@ -24,30 +21,38 @@ env.AddMethod(count_words, "CountWords")
 
 env.CountWords(DATA_FILES)
 
-env.Alias("dats", DATA_FILES)
+dats = env.Alias("dats", DATA_FILES)
+help_content = return_help_content(
+    dats,
+    "Count words in text files.",
+)
 
-env.Command(
+results = env.Command(
     target=["results.txt"],
     source=[ZIPF_SOURCE] + DATA_FILES,
     action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
     language=LANGUAGE,
     zipf_source=ZIPF_SOURCE,
 )
+help_content = return_help_content(
+    results,
+    "Generate Zipf summary table.",
+    help_content,
+)
 
 for plot_file, data_file in zip(PLOT_FILES, DATA_FILES):
-    env.Command(
+    plot = env.Command(
         target=[plot_file],
         source=[PNG_SOURCE, data_file],
         action=["${language} ${SOURCES[0]} ${SOURCES[1]} ${TARGET}"],
         language=LANGUAGE,
     )
+    help_content = return_help_content(
+        plot,
+        f"Plot {data_file} analysis",
+        help_content,
+    )
 
 env.Default(["results.txt"] + PLOT_FILES)
 
-help_message = "\nDefault Targets:\n"
-for target in DEFAULT_TARGETS:
-    help_message += f"    {str(target)}\n"
-help_message += "\nTarget Aliases:\n"
-for alias in default_ans:
-    help_message += f"    {alias}\n"
-env.Help(help_message, append=True, keep_local=True)
+project_help(help_content)
