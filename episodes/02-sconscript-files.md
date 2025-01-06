@@ -492,7 +492,7 @@ env.Alias("dats", ["isles.dat", "abyss.dat"])
 The following figure shows a graph of the dependencies embodied within
 our SConstruct file, involved in building the `dats` alias:
 
-![](fig/02-makefile.png "Dependencies represented within the SConstruct file"){alt='Dependencies represented within the SConstruct file'}
+![](fig/02-sconscript.png "Dependencies represented within the SConstruct file"){alt='Dependencies represented within the SConstruct file'}
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
@@ -522,7 +522,7 @@ See [this file](files/code/02-sconscript-files-challenge/SConstruct) for a solut
 The following figure shows the dependencies embodied within our
 SConstruct file, involved in building the `results.txt` target:
 
-![](fig/02-makefile-challenge.png "results.txt dependencies represented within the SConstruct file"){alt='results.txt dependencies represented within the SConstruct file'}
+![](fig/02-sconscript-challenge.png "results.txt dependencies represented within the SConstruct file"){alt='results.txt dependencies represented within the SConstruct file'}
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
