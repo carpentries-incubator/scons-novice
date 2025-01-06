@@ -28,6 +28,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
+The instructional material in this project is adapted from
+[https://github.com/swcarpentry/make-novice](https://github.com/swcarpentry/make-novice) source
+repository at commit
+[ba7c2dd](https://github.com/swcarpentry/make-novice/tree/ba7c2ddeecc2deb6fbd540107f3d4446c85675fe)
+
+The Makefiles have been replaced with SCons configuration files and the lessons have been updated
+to discuss SCons concepts. The original instruction material and software is governed by the
+Creative commons attribution and MIT licenses, respectively, reproduced below.
+
 ## Instructional Material
 
 All Carpentries (Software Carpentry, Data Carpentry, and Library Carpentry)
