@@ -5,8 +5,9 @@
 # scons-novice
 
 Adapted from
-[https://swcarpentry.github.io/make-novice/](https://swcarpentry.github.io/make-novice/) source
-repository at commit [ba7c2dd](https://github.com/swcarpentry/make-novice)
+[https://github.com/swcarpentry/make-novice](https://github.com/swcarpentry/make-novice) source
+repository at commit
+[ba7c2dd](https://github.com/swcarpentry/make-novice/tree/ba7c2ddeecc2deb6fbd540107f3d4446c85675fe)
 
     Mike Jackson (ed.): "Software Carpentry: Automation and Make."
     Version 2016.06, June 2016,
