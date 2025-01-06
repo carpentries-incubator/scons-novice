@@ -1,5 +1,10 @@
-Please cite as:
-
-Mike Jackson (ed.): "Software Carpentry: Automation and Make."
-Version 2016.06, June 2016,
-https://github.com/swcarpentry/make-novice, 10.5281/zenodo.57473.
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Brindley"
+  given-names: "Kyle"
+  orcid: "https://orcid.org/0000-0002-9637-4706"
+title: "scons-novice"
+doi: ""
+date-released: ""
+url: "https://github.com/lanl-aea/scons-novice"
