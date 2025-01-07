@@ -22,7 +22,7 @@ replace these tasks with a single [builder](../learners/reference.md#builder) wh
 build any `.dat` file from a `.txt` file in `books/`:
 
 ```python
-count_words_builder = env.Builder(
+count_words_builder = Builder(
     action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
 )
 ```
@@ -99,7 +99,7 @@ def count_words(env, data_file):
     :param data_file: String name of the data file to create.
     """
     data_path = pathlib.Path(data_file)
-    text_file = pathlib.Path("books") / data_path.with_suffix[".txt"]
+    text_file = pathlib.Path("books") / data_path.with_suffix(".txt")
     target_nodes = env.Command(
         target=[data_file],
         source=[text_file, "countwords.py"],
@@ -109,7 +109,7 @@ def count_words(env, data_file):
 
 
 env = Environment(ENV=os.environ.copy())
-env.AddMethod("CountWords", count_words)
+env.AddMethod(count_words, "CountWords")
 ```
 
 This pseudo-builder has further reduced the interface necessary to define the `.dat` tasks, which
