@@ -165,15 +165,15 @@ nodes to return from our psuedo-builder.
 def count_words(env, data_files, language=LANGUAGE, count_source=COUNT_SOURCE):
     """Pseudo-builder to produce `.dat` targets from the `countwords.py` script
 
-    Assumes that the source text file is found in `books/{data_file}.txt`
+    Assumes that the source text files are found in `books/{data_file}.txt`
 
     :param env: SCons construction environment. Do not provide when using this
         function with the `env.AddMethod` and `env.CountWords` access style.
     :param data_files: List of string names of the data files to create.
     """
-    data_path = pathlib.Path(data_file)
     target_nodes = []
     for data_file in data_files:
+        data_path = pathlib.Path(data_file)
         text_file = pathlib.Path("books") / data_path.with_suffix(".txt")
         target_nodes.extend(
             env.Command(
