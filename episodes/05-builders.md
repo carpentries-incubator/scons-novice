@@ -22,7 +22,7 @@ replace these tasks with a single [builder](../learners/reference.md#builder) wh
 build any `.dat` file from a `.txt` file in `books/`:
 
 ```python
-count_words_builder = env.Builder(
+count_words_builder = Builder(
     action=["python ${SOURCES[-1]} ${SOURCES[0]} ${TARGET}"],
 )
 ```
