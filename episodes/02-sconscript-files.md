@@ -188,7 +188,7 @@ scons: done building targets.
 ```
 
 This is a surprising result if you are already familiar with other build managers. Many build
-managers, such as [GNU Make](../episodes/01-intro.md#gnu-make) use timestamps to track the state of
+managers, such as [GNU Make](https://www.gnu.org/software/make/) use timestamps to track the state of
 source and target files. If we were using Make, Make would have re-created the `isles.dat` file.
 
 By default SCons computes content signatures from the file content to track the state of source and
