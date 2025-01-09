@@ -205,7 +205,7 @@ computed as an `md5sum`. If we run the `md5sum` ourselves, we can see the signat
 and after the file edit.
 
 ```bash
-$ md5sum books/isles.dat
+$ md5sum books/isles.txt
 ```
 
 ```output
@@ -216,7 +216,7 @@ Append an empty newline to the `books/isles.txt` file and check the `md5sum` sig
 
 ```bash
 $ echo "" >> books/isles.txt
-$ md5sum books/isles.dat
+$ md5sum books/isles.txt
 ```
 
 ```output
