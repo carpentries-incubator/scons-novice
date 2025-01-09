@@ -398,7 +398,7 @@ We may want to simplify specification of some, but not all, targets. We can add 
 reference all of the data files.
 
 ```python
-env.Alias("dats", ["isles.dat", "absyss.dat"])
+env.Alias("dats", ["isles.dat", "abyss.dat"])
 ```
 
 This simplifies calling a non-default target list such that we do not have to write out each target
