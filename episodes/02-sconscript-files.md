@@ -188,7 +188,7 @@ scons: done building targets.
 ```
 
 This is a surprising result if you are already familiar with other build managers. Many build
-managers, such as [GNU Make](../episodes/01-intro.md#gnu-make) use timestamps to track the state of
+managers, such as [GNU Make](https://www.gnu.org/software/make/) use timestamps to track the state of
 source and target files. If we were using Make, Make would have re-created the `isles.dat` file.
 
 By default SCons computes content signatures from the file content to track the state of source and
@@ -205,7 +205,7 @@ computed as an `md5sum`. If we run the `md5sum` ourselves, we can see the signat
 and after the file edit.
 
 ```bash
-$ md5sum books/isles.dat
+$ md5sum books/isles.txt
 ```
 
 ```output
@@ -216,7 +216,7 @@ Append an empty newline to the `books/isles.txt` file and check the `md5sum` sig
 
 ```bash
 $ echo "" >> books/isles.txt
-$ md5sum books/isles.dat
+$ md5sum books/isles.txt
 ```
 
 ```output
@@ -398,7 +398,7 @@ We may want to simplify specification of some, but not all, targets. We can add 
 reference all of the data files.
 
 ```python
-env.Alias("dats", ["isles.dat", "absyss.dat"])
+env.Alias("dats", ["isles.dat", "abyss.dat"])
 ```
 
 This simplifies calling a non-default target list such that we do not have to write out each target
