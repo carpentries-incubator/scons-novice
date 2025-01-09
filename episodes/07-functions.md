@@ -81,7 +81,7 @@ AddOption(
     action="store_true",
     help="Print the text files returned by Glob and exit (default: %default)",
 )
-if GetOption("text_files"):
+if GetOption("variables"):
     text_file_strings = [str(node) for node in TEXT_FILES]
     print(f"TEXT_FILES: {text_file_strings}")
     Exit(0)
