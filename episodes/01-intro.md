@@ -308,8 +308,7 @@ encounter Make.
 Make introduced fundamental concepts that are common across most build tools.
 
 [GNU Make][gnu-make] is a free-libre, fast, [well-documented][gnu-make-documentation],
-and very popular Make implementation. From now on, we will focus on it, and when we say
-Make, we mean GNU Make.
+and very popular Make implementation. From now on, when we say Make, we mean GNU Make.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
