@@ -76,7 +76,9 @@ environment:
     # Remove write permissions from group to avoid accidental environment changes
     - chmod -R 755 ${environment_path}
   tags:
-    - shell-aea
+    - shell
+    - aea
+    - linux
 
 test:
   stage: test
@@ -93,7 +95,9 @@ test:
     - echo $lesson_directories
     - for directory in $(echo $lesson_directories); do cp $directory/* .; scons . --clean && scons .; done
   tags:
-    - shell-aea
+    - shell
+    - aea
+    - linux
 
 # It MUST be called pages
 pages:
@@ -114,4 +118,6 @@ pages:
       # It MUST be called public
       - public
   tags:
-    - shell-aea
+    - shell
+    - aea
+    - linux
