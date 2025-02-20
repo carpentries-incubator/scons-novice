@@ -91,9 +91,9 @@ test:
     - R -e 'sandpaper::build_lesson(preview = FALSE)'
     - unzip episodes/files/scons-lesson.zip
     - cd scons-lesson
-    - lesson_directories=$(ls -d ../episodes/files/code/0[0-9]*/)
-    - echo $lesson_directories
-    - for directory in $(echo $lesson_directories); do cp $directory/* .; scons . --clean && scons .; done
+    - lesson_directories=(../episodes/files/code/*/)
+    - echo ${lesson_directories[@]}
+    - for directory in ${lesson_directories[@]}; do cp $directory/* .; scons . --clean && scons .; done
   tags:
     - shell
     - aea
