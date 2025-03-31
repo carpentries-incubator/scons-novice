@@ -29,7 +29,7 @@ You need to download some files to follow this lesson:
 ## Software
 
 You also need to have the following software installed on your computer to follow this lesson. The
-recommeneded approach is to create a
+recommended approach is to create a
 [Conda](https://docs.conda.io/projects/conda/en/latest/index.html) virtual environment for this
 lesson.
 
