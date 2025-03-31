@@ -291,8 +291,6 @@ computing environments popular with computational science and engineering commun
 uses Python as the configuration language, so the configuration files will feel familiar to many
 students.
 
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
 [zipfs-law]: https://en.wikipedia.org/wiki/Zipf%27s_law
 [apache-ant]: https://ant.apache.org/
 [doit]: https://pydoit.org/
