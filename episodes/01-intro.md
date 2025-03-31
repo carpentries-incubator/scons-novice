@@ -291,26 +291,6 @@ computing environments popular with computational science and engineering commun
 uses Python as the configuration language, so the configuration files will feel familiar to many
 students.
 
-:::::::::::::::::::::::::::::::::::::::::  callout
-
-## Why mention Make if it is Almost 40 Years Old?
-
-Make development was started by Stuart Feldman in 1977 as a Bell
-Labs summer intern. Since then it has been undergoing an active
-development and several implementations are available. Since it
-solves a common issue of workflow management, it remains in
-widespread use even today.
-
-Researchers working with legacy codes in C or FORTRAN, which are
-very common in high-performance computing, will, very likely
-encounter Make.
-
-Make introduced fundamental concepts that are common across most build tools.
-
-[GNU Make][gnu-make] is a free-libre, fast, [well-documented][gnu-make-documentation],
-and very popular Make implementation. From now on, when we say Make, we mean GNU Make.
-
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 [zipfs-law]: https://en.wikipedia.org/wiki/Zipf%27s_law
