@@ -1,0 +1,55 @@
+import os
+import pathlib
+
+from scons_lesson_configuration import *
+
+AddOption(
+    "--variables",
+    action="store_true",
+    default=False,
+    help="Print the files returned by Glob and exit (default: '%default')",
+)
+if GetOption("variables"):
+    text_file_strings = [str(node) for node in TEXT_FILES]
+    print(f"TEXT_FILES: {text_file_strings}")
+    print(f"DATA_FILES: {DATA_FILES}")
+    print(f"PLOT_FILES: {PLOT_FILES}")
+    Exit(0)
+
+env = Environment(ENV=os.environ.copy())
+env.AddMethod(count_words, "CountWords")
+env.AddMethod(plot_counts, "PlotCounts")
+
+env.CountWords(DATA_FILES)
+
+dats = env.Alias("dats", DATA_FILES)
+help_content = return_help_content(
+    dats,
+    "Count words in text files.",
+)
+
+results = env.Command(
+    target=["results.txt"],
+    source=[ZIPF_SOURCE] + DATA_FILES,
+    action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
+    language=LANGUAGE,
+    zipf_source=ZIPF_SOURCE,
+)
+help_content = return_help_content(
+    results,
+    "Generate Zipf summary table.",
+    help_content,
+)
+
+env.PlotCounts(PLOT_FILES)
+
+plots = env.Alias("plots", PLOT_FILES)
+help_content = return_help_content(
+    plots,
+    f"Plot word counts.",
+    help_content,
+)
+
+env.Default(["results.txt"] + PLOT_FILES)
+
+project_help(help_content)

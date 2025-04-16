@@ -1,0 +1,27 @@
+import os
+import pathlib
+
+from scons_lesson_configuration import *
+
+env = Environment(ENV=os.environ.copy())
+env.AddMethod(count_words, "CountWords")
+
+env.CountWords("isles.dat")
+env.CountWords("abyss.dat")
+env.CountWords("last.dat")
+
+env.Alias("dats", ["isles.dat", "abyss.dat", "last.dat"])
+
+env.Command(
+    target=["results.txt"],
+    source=[ZIPF_SOURCE, "isles.dat", "abyss.dat", "last.dat"],
+    action=["${language} ${zipf_source} ${SOURCES[1:]} > ${TARGET}"],
+    language=LANGUAGE,
+    zipf_source=ZIPF_SOURCE,
+)
+
+env.Default(["results.txt"])
+
+for target in COMMAND_LINE_TARGETS:
+    if pathlib.Path(target).suffix == ".dat":
+        env.CountWords(target)
