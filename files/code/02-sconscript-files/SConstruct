@@ -1,0 +1,17 @@
+import os
+
+env = Environment(ENV=os.environ.copy())
+
+env.Command(
+    target=["isles.dat"],
+    source=["books/isles.txt"],
+    action=["python countwords.py books/isles.txt isles.dat"],
+)
+
+env.Command(
+    target=["abyss.dat"],
+    source=["books/abyss.txt"],
+    action=["python countwords.py books/abyss.txt abyss.dat"],
+)
+
+env.Alias("dats", ["isles.dat", "abyss.dat"])
