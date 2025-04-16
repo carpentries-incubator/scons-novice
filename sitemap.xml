@@ -37,7 +37,13 @@
     <loc>https://swcarpentry.github.io/scons-novice/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://swcarpentry.github.io/scons-novice/aio.html</loc>
+  </url>
+  <url>
     <loc>https://swcarpentry.github.io/scons-novice/discuss.html</loc>
+  </url>
+  <url>
+    <loc>https://swcarpentry.github.io/scons-novice/images.html</loc>
   </url>
   <url>
     <loc>https://swcarpentry.github.io/scons-novice/index.html</loc>
@@ -79,16 +85,34 @@
     <loc>https://swcarpentry.github.io/scons-novice/instructor/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://swcarpentry.github.io/scons-novice/instructor/aio.html</loc>
+  </url>
+  <url>
     <loc>https://swcarpentry.github.io/scons-novice/instructor/discuss.html</loc>
   </url>
   <url>
+    <loc>https://swcarpentry.github.io/scons-novice/instructor/images.html</loc>
+  </url>
+  <url>
     <loc>https://swcarpentry.github.io/scons-novice/instructor/index.html</loc>
+  </url>
+  <url>
+    <loc>https://swcarpentry.github.io/scons-novice/instructor/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://swcarpentry.github.io/scons-novice/instructor/key-points.html</loc>
   </url>
   <url>
     <loc>https://swcarpentry.github.io/scons-novice/instructor/profiles.html</loc>
   </url>
   <url>
     <loc>https://swcarpentry.github.io/scons-novice/instructor/reference.html</loc>
+  </url>
+  <url>
+    <loc>https://swcarpentry.github.io/scons-novice/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://swcarpentry.github.io/scons-novice/key-points.html</loc>
   </url>
   <url>
     <loc>https://swcarpentry.github.io/scons-novice/profiles.html</loc>
