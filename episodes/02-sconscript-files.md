@@ -37,7 +37,7 @@ env.Command(
 ```
 
 This is a [build file](../learners/reference.md#build-file), which for SCons is called an
-[SConscript](../learners/reference.md#makefile) file - a file executed by SCons. `SConstruct` is the
+[SConscript](../learners/reference.md#sconscript) file - a file executed by SCons. `SConstruct` is the
 conventional name for the root configuration file. Secondary configuration files are named
 `SConscript` by convention, but can take any filename. Together all SCons configuration files take
 the generic name `SConscript` files. From now on, SCons configuration files will be referred to
